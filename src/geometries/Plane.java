@@ -23,8 +23,8 @@ public class Plane extends Geometry {
      * @param p3 third point
      */
     public Plane (Point p1, Point p2, Point p3) {
-        this.normal = null;
         this.point = p1;
+        this.normal = p2.subtract(p1).crossProduct(p3.subtract(p1)).normalize();
     }
 
     /**

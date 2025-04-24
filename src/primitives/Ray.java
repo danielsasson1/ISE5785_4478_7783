@@ -19,4 +19,12 @@ public class Ray {
     public String toString() {
         return "Ray" + point + vector;
     } // overriding the toString method
+
+    public Point getPoint() {
+        return point;
+    } // getter for the point
+
+    public Vector getVector() {
+        return vector;
+    } // getter for the vector
 }

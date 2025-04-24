@@ -2,7 +2,7 @@ package geometries;
 import primitives.Point;
 import primitives.Vector;
 
-public abstract class Sphere extends RadialGeometry {
+public class Sphere extends RadialGeometry {
     private final Point center;
 
     /**
@@ -12,6 +12,9 @@ public abstract class Sphere extends RadialGeometry {
      */
     public Sphere(Point center, double radius) {
         super(radius);
+        if (radius <= 0) {
+            throw new IllegalArgumentException("Radius must be positive");
+        }
         this.center = center;
     }
 
@@ -19,8 +22,9 @@ public abstract class Sphere extends RadialGeometry {
      * Getter for the center of the sphere
      * @return the center of the sphere
      */
-    @Override
+    //@Override
     public Vector getNormal(Point point) {
-        return null;
+        // Calculate the normal vector at the given point on the sphere
+        return point.subtract(center).normalize();
     }
 }
