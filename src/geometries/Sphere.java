@@ -2,9 +2,16 @@ package geometries;
 import primitives.Point;
 import primitives.Vector;
 
+/**
+ * Sphere class represents a sphere in 3D space
+ * It extends the RadialGeometry class
+ */
 public class Sphere extends RadialGeometry {
     private final Point center;
-
+    /**
+     * Getter for the center of the sphere
+     * @return the center of the sphere
+     */
     /**
      * Constructor for Sphere
      * @param center the center of the sphere

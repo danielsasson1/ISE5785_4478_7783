@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class PointTests {
     @Test
     void subtract() {
+        // ============ Equivalence Partitions Tests ==============
         Point p1 = new Point(1, 2, 3);
         Point p2 = new Point(2, 4, 6);
         Vector v1 = new Vector(1, 2, 3);
@@ -23,6 +24,7 @@ public class PointTests {
          * Test the subtraction of two points
          * Check if the result is equal to the zero vector
          */
+        // =============== Boundary Values Tests ==================
         assertThrows(IllegalArgumentException.class, () -> p1.subtract(p1), "ERROR: (point - itself) does not work correctly");
     }// subtracting two points
 
@@ -37,13 +39,14 @@ public class PointTests {
          * Test the addition of a vector to a point
          * Check if the result is equal to the expected point
          */
-
+        // =============== Equivalence Partitions Tests ==================
         assertEquals(p2, p1.add(v1), "ERROR: (point + vector) = other point does not work correctly");
         /*
         TC04
          * Test the addition of a vector to a point
          * Check if the result is equal to the zero point
          */
+        // =============== Boundary Values Tests ==================
         assertEquals(Point.ZERO, p1.add(v1.scale(-1)), "ERROR: (point + vector) = zero point does not work correctly");
     }// adding a vector to a point
 
@@ -56,12 +59,14 @@ public class PointTests {
          * Test the squared distance between two points
          * Check if the result is equal to the expected value
          */
-        assertEquals(14, p1.distanceSquared(p2), "ERROR: point squared distance to itself is not zero");
+        // =============== Equivalence Partitions Tests ==================
+        assertEquals(14, p1.distanceSquared(p2), "ERROR: point squared distance does not work correctly");
         /*
         TC06
          * Test the squared distance between two points
          * Check if the result is equal to the expected value
          */
+        // =============== Boundary Values Tests ==================
         assertEquals(0, p1.distanceSquared(p1), "ERROR: point squared distance to itself is not zero");
     }// calculating the squared distance between two points
 
@@ -74,12 +79,14 @@ public class PointTests {
          * Test the distance between two points
          * Check if the result is equal to the expected value
          */
+        // =============== Equivalence Partitions Tests ==================
         assertEquals(Math.sqrt(14), p1.distance(p2), "ERROR: point distance to itself is not zero");
         /*
         TC08
          * Test the distance between two points
          * Check if the result is equal to the expected value
          */
+        // =============== Boundary Values Tests ==================
         assertEquals(0, p1.distance(p1), "ERROR: point distance to itself is not zero");
     }// calculating the distance between two points
 }

@@ -29,9 +29,12 @@ class CylinderTests {
 
         // =============== Boundary Values Tests =================
         //TC02 the point is on the side outer surface of the cylinder
-        assertEquals(normalP1, c1.getNormal(new Point(3, 3, 1)), "ERROR: getNormal of cylinder doesn't work properly (TC04)");
+        assertEquals(normalP1, c1.getNormal(new Point(3, 3, 1)), "ERROR: getNormal of cylinder doesn't work properly in the side outer surface (TC02)");
         //TC03 the point is on the side inner surface of the cylinder
-        assertEquals(normalP1, c1.getNormal(new Point(3, 3, 1)), "ERROR: getNormal of cylinder doesn't work properly (TC05)");
-
+        assertEquals(normalP1, c1.getNormal(new Point(3, 3, 1)), "ERROR: getNormal of cylinder doesn't work properly side inner surface (TC03)");
+        //TC04 the point is on the top base of the cylinder
+        assertEquals(normalP1, c1.getNormal(new Point(3, 3, 5)), "ERROR: getNormal of cylinder doesn't work properly on the top base (TC04)");
+        //TC05 the point is on the bottom base of the cylinder
+        assertEquals(normalP2, c1.getNormal(new Point(3, 3, -1)), "ERROR: getNormal of cylinder doesn't work properly on the bottom base (TC05)");
     }
 }

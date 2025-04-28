@@ -2,9 +2,16 @@ package geometries;
 import primitives.Ray;
 import primitives.Vector;
 import primitives.Point;
-
+/*
+ * Tube class represents a tube geometry in 3D space.
+ * It extends the RadialGeometry class and provides methods to calculate the normal vector at a given point on the tube's surface.
+ */
 public class Tube extends RadialGeometry{
     protected final Ray axis;
+    /**
+     * Constructor for Tube
+     * @param axis the axis of the tube
+     */
 
     /**
      * Constructor for Tube

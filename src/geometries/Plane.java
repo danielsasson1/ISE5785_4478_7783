@@ -2,10 +2,22 @@ package geometries;
 import primitives.Point;
 import primitives.Vector;
 
+/**
+ * Plane class represents a geometric plane in 3D space.
+ * It is defined by a point on the plane and a normal vector.
+ */
+/**
+ * The Plane class extends the Geometry class and provides methods to
+ * calculate the normal vector at a given point on the plane.
+ */
 public class Plane extends Geometry {
     private final Point point;
     private final Vector normal;
-
+    /**
+     * Constructor for Plane class
+     * @param point a point on the plane
+     * @param normal a normal vector to the plane
+     */
     /**
      * Constructor for Plane class
      * @param point a point on the plane
@@ -36,3 +48,7 @@ public class Plane extends Geometry {
         return normal;
     }
 }
+/**
+ * The Plane class represents a geometric plane in 3D space.
+ * It is defined by a point on the plane and a normal vector.
+ */

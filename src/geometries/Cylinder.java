@@ -3,9 +3,17 @@ import primitives.Ray;
 import primitives.Vector;
 import primitives.Point;
 
+/**
+ * Cylinder class represents a cylinder in 3D space.
+ * It extends the Tube class and adds a height property.
+ */
 public class Cylinder extends Tube {
     private final double height;
-
+    /**
+     * Constructor for Cylinder
+     * @param axis - the axis of the cylinder
+     * @param radius - the radius of the cylinder
+     */
     /**
      * Constructor for Cylinder
      * @param axis - the axis of the cylinder
@@ -15,6 +23,12 @@ public class Cylinder extends Tube {
     public Cylinder (Ray axis, double radius, double height) {
         super(axis, radius);
         this.height = height;
+        /*
+        @param axis - the axis of the cylinder
+        @param radius - the radius of the cylinder
+        @param height - the height of the cylinder
+        The constructor initializes the cylinder with the given axis, radius, and height.
+         */
     }
 
     /**
@@ -40,6 +54,11 @@ public class Cylinder extends Tube {
 
         // Otherwise, call the superclass method
         return super.getNormal(point);
-    }
 
+    }
+    //javadoc
+    /**
+     * Getter for the height of the cylinder
+     * @return the height of the cylinder
+     */
 }
