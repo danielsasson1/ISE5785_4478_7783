@@ -2,6 +2,7 @@ package geometries;
 import primitives.Ray;
 import primitives.Vector;
 import primitives.Point;
+import java.util.List;
 /*
  * Tube class represents a tube geometry in 3D space.
  * It extends the RadialGeometry class and provides methods to calculate the normal vector at a given point on the tube's surface.
@@ -43,4 +44,8 @@ public class Tube extends RadialGeometry{
             return point.subtract(axis.getPoint());
         }
     }
+
+    public List<Point> findIntersections(Ray ray) {
+        return null;
+    } // finding the intersection points
 }

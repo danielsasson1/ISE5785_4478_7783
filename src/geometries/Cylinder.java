@@ -3,6 +3,8 @@ import primitives.Ray;
 import primitives.Vector;
 import primitives.Point;
 
+import java.util.List;
+
 /**
  * Cylinder class represents a cylinder in 3D space.
  * It extends the Tube class and adds a height property.
@@ -61,4 +63,8 @@ public class Cylinder extends Tube {
      * Getter for the height of the cylinder
      * @return the height of the cylinder
      */
+
+    public List<Point> findIntersections(Ray ray) {
+        return null;
+    } // finding the intersection points
 }

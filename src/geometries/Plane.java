@@ -1,7 +1,9 @@
 package geometries;
 import primitives.Point;
 import primitives.Vector;
-
+import primitives.Ray;
+import java.util.List;
+import primitives.Util;
 /**
  * Plane class represents a geometric plane in 3D space.
  * It is defined by a point on the plane and a normal vector.
@@ -47,6 +49,24 @@ public class Plane extends Geometry {
     public Vector getNormal(Point point) {
         return normal;
     }
+
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        Vector rayDirection = ray.getVector();
+        Point rayOrigin = ray.getPoint();
+        if (Util.isZero(rayDirection.dotProduct(normal)) || point.equals(rayOrigin)) {
+            return null; // The ray is parallel to the plane - infinite intersections. or the ray starts on the plane - illegal.
+        }
+        // Calculate the distance from the ray origin to the plane
+        double Temp = normal.dotProduct(point.subtract(rayOrigin)) / normal.dotProduct(rayDirection);
+        return Temp > 0 ? List.of(rayOrigin.add(rayDirection.scale(Temp))) : null; // The ray intersects the plane
+
+    }
+    /**
+     * Returns the normal vector to the plane at a given point
+     * @param point the point on the plane
+     * @return the normal vector
+     */
 }
 /**
  * The Plane class represents a geometric plane in 3D space.
