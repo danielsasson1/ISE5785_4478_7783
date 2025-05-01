@@ -19,7 +19,7 @@ public class Triangle extends Polygon {
     }
     /**
      * Constructor for Triangle with a list of points
-     * @param points list of points of the triangle
+     * @param ray list of points of the triangle
      */
     public List<Point> findIntersections(Ray ray) {
         List<Point> intersections = plane.findIntersections(ray);

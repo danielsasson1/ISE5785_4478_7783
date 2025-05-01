@@ -53,7 +53,7 @@ public class Plane extends Geometry {
     @Override
     public List<Point> findIntersections(Ray ray) {
         Vector rayDirection = ray.getVector();
-        Point rayOrigin = ray.getPoint();
+        Point rayOrigin = ray.getPoint(0);
         if (Util.isZero(rayDirection.dotProduct(normal)) || point.equals(rayOrigin)) {
             return null; // The ray is parallel to the plane - infinite intersections. or the ray starts on the plane - illegal.
         }

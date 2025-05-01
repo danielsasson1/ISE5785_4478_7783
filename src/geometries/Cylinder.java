@@ -40,18 +40,18 @@ public class Cylinder extends Tube {
     //@Override
     public Vector getNormal(Point point) {
         // If p0 is the head of the axis
-        if (point.equals(axis.getPoint()))
+        if (point.equals(axis.getPoint(0)))
             return axis.getVector().scale(-1);
 
         // If p1 is the end of the axis
-        if (point.equals(axis.getPoint().add(axis.getVector().scale(height))))
+        if (point.equals(axis.getPoint(0).add(axis.getVector().scale(height))))
             return axis.getVector();
 
         // If the point is on the top or bottom surface of the cylinder
-        if (axis.getPoint().subtract(point).dotProduct(axis.getVector()) == 0)
+        if (axis.getPoint(0).subtract(point).dotProduct(axis.getVector()) == 0)
             return axis.getVector().scale(-1);
 
-        if (axis.getPoint().add(axis.getVector().scale(height)).subtract(point).dotProduct(axis.getVector()) == 0)
+        if (axis.getPoint(0).add(axis.getVector().scale(height)).subtract(point).dotProduct(axis.getVector()) == 0)
             return axis.getVector();
 
         // Otherwise, call the superclass method

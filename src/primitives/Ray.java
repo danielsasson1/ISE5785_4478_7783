@@ -20,9 +20,14 @@ public class Ray {
         return "Ray" + point + vector;
     } // overriding the toString method
 
-    public Point getPoint() {
-        return point;
-    } // getter for the point
+    public Point getPoint(double t) {
+        if (Util.isZero(t)) return point;
+        return point.add(vector.scale(t));
+    } // getter for the point at a certain distance from the head
+    /**
+     * Getter for the point on the ray at a certain distance from the head
+     * @return the point on the ray at the distance t from the head
+     */
 
     public Vector getVector() {
         return vector;

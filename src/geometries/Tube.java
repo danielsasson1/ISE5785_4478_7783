@@ -31,17 +31,17 @@ public class Tube extends RadialGeometry{
     //@Override
     public Vector getNormal(Point point) {
         // Calculate the vector from the axis head to the given point
-        Vector headToPoint = point.subtract(axis.getPoint());
+        Vector headToPoint = point.subtract(axis.getPoint(0));
         // Calculate the projection of the head-to-point vector onto the axis direction
         double t = headToPoint.dotProduct(axis.getVector());
         if (t != 0) {
             // Calculate the point on the axis that is closest to the given point
-            Point o = axis.getPoint().add(axis.getVector().scale(t));
+            Point o = axis.getPoint(0).add(axis.getVector().scale(t));
             // Calculate the vector from the closest point on the axis to the given point and normalize it
             return point.subtract(o).normalize();
         } else {
             //if t=0 we don't need to create the point o, we already have the closest point on the axis to the given point
-            return point.subtract(axis.getPoint());
+            return point.subtract(axis.getPoint(0));
         }
     }
 

@@ -85,7 +85,7 @@ public class Polygon extends Geometry {
     public List<Point> findIntersections(Ray ray) {
         // Check if the ray is in the same plane as the polygon
         List<Vector> normals = new LinkedList<>();
-        final Point p0 = ray.getPoint();
+        final Point p0 = ray.getPoint(0);
         final Vector v = ray.getVector();
         Vector v1 = vertices.getFirst().subtract(p0);
         for (Point vertex : vertices.subList(1, size)) {
