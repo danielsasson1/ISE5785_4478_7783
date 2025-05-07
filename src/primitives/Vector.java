@@ -2,6 +2,7 @@ package primitives;
 import static primitives.Double3.ZERO;
 
 public class Vector extends Point {
+
     // Constructors
     public Vector(double d1, double d2, double d3) {
         super(d1, d2, d3); // calling the constructor of the parent class
@@ -51,4 +52,8 @@ public class Vector extends Point {
     public String toString() {
         return "Vector" + point;
     }
+
+    public static final Vector AXIS_X = new Vector(1,0,0); // A static vector at (1,0,0)
+    public static final Vector AXIS_Y = new Vector(0,1,0); // A static vector at (0,1,0)
+    public static final Vector AXIS_Z = new Vector(0,0,1); // A static vector at (0,0,1)
 }
