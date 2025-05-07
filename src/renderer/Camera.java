@@ -77,6 +77,8 @@ public class Camera implements Cloneable {
         public Builder setDirection(Point Point_Direction, Vector vUp) {
             camera.vUp = vUp.normalize();
             camera.vTo = Point_Direction.subtract(camera.p0).normalize();
+            camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+            camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
             // calculate the right direction of the camera
             return this;
         }
@@ -126,9 +128,7 @@ public class Camera implements Cloneable {
          */
 
         public Builder setResolution(int nX, int nY) {
-            camera.width = nX;
-            camera.height = nY;
-            return this;
+            return null;
         }
         /*
          * set the resolution of the camera
