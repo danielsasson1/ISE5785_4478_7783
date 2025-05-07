@@ -256,7 +256,7 @@ public class Camera implements Cloneable {
         double Xj = (j - (nX - 1) / 2d) * (width / nX); // the x coordinate of the point on the view plane
         if(!Util.isZero(Xj)) Pij = Pij.add(vRight.scale(Xj)); // if the x coordinate is not zero, add the right direction of the camera
         if(!Util.isZero(Yi)) Pij = Pij.add(vUp.scale(Yi)); // if the y coordinate is not zero, add the up direction of the camera
-        return new Ray(p0, Pij.subtract(p0).normalize()); // return the ray from the camera to the point on the view plane
+        return new Ray(p0, Pij.subtract(p0)); // return the ray from the camera to the point on the view plane
     }
     /*
      * construct a ray from the camera to the point on the view plane
