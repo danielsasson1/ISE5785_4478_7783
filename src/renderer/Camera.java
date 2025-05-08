@@ -3,6 +3,15 @@ import primitives.*;
 import java.util.MissingResourceException;
 
 public class Camera implements Cloneable {
+    /**
+     * @param p0 The direction the camera is looking at
+     * @param vTo The up direction of the camera
+     * @param vUp The right direction of the camera
+     * @param vRight The right direction of the camera
+     * @param width The width of the camera
+     * @param height The height of the camera
+     * @param distance The distance of the camera from the view plane
+     */
     private Point p0; // the position of the camera
     private Vector vTo; // the direction the camera is looking at
     private Vector vUp; // the up direction of the camera
@@ -10,6 +19,8 @@ public class Camera implements Cloneable {
     private double width = 0; // the width of the camera, default is 0
     private double height = 0; // the height of the camera
     private double distance = 0; // the distance of the camera from the view plane
+    private Point VP_Center;
+
     /**
      * Constructor for Camera
      * the position of the camera
@@ -178,6 +189,8 @@ public class Camera implements Cloneable {
             if (camera.distance <= 0)
                 throw new IllegalArgumentException("distance from camera to view must be positive");
             try {
+                camera.VP_Center = camera.p0.add(camera.vTo.scale(camera.distance)); // add the direction of the camera
+
                 return (Camera) camera.clone();
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
@@ -250,8 +263,7 @@ public class Camera implements Cloneable {
      */
 
     public Ray constructRay(int nX, int nY, int j, int i) {
-        Point Pij = p0; // the point on the view plane
-        Pij = Pij.add(vTo.scale(distance)); // add the direction of the camera
+        Point Pij = this.VP_Center; // the point on the view plane
         double Yi = -(i - (nY - 1) / 2d) * (height / nY); // the y coordinate of the point on the view plane
         double Xj = (j - (nX - 1) / 2d) * (width / nX); // the x coordinate of the point on the view plane
         if(!Util.isZero(Xj)) Pij = Pij.add(vRight.scale(Xj)); // if the x coordinate is not zero, add the right direction of the camera

@@ -12,28 +12,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CameraIntersectionsIntegrationTests {
 
-    private final Vector yAxis = new Vector(0, -1, 0);
-    private final Vector zAxis = new Vector(0, 0, -1);
+    private final Vector yAxis = new Vector(0, -1, 0); // up direction
+    private final Vector zAxis = new Vector(0, 0, -1); // direction camera is looking at
 
-    private final Camera.Builder cameraBuilder = Camera.getBuilder()
-            .setDirection(zAxis, yAxis)
-            .setVpDistance(1)
-            .setVpSize(3, 3);
+    private final Camera.Builder cameraBuilder = Camera.getBuilder() // camera builder
+            .setDirection(zAxis, yAxis) // set the direction camera is looking at
+            .setVpDistance(1) // set the distance of the camera from the view plane
+            .setVpSize(3, 3); // set the size of the view plane
 
-    private final Camera camera = cameraBuilder.setLocation(new Point(0, 0, 0.5)).build();
+    private final Camera camera = cameraBuilder.setLocation(new Point(0, 0, 0.5)).build(); // camera object
 
     /**
      * helper function to test the amount of intersections
      */
     private void amountOfIntersections(Camera camera, Geometry geometry, int expectedAmount) {
-        int intersections = 0;
-        for (int j = 0; j < 3; j++)
-            for (int i = 0; i < 3; i++) {
-                List<Point> intersectionsList = geometry.findIntersections(camera.constructRay(3, 3, j, i));
-                intersections += intersectionsList != null ? intersectionsList.size() : 0;
+        int intersections = 0; // amount of intersections
+        for (int j = 0; j < 3; j++) // iterate over the view plane
+            for (int i = 0; i < 3; i++) { // iterate over the view plane
+                List<Point> intersectionsList = geometry.findIntersections(camera.constructRay(3, 3, j, i)); // get the intersections
+                intersections += intersectionsList != null ? intersectionsList.size() : 0; // add the amount of intersections
             }
 
-        assertEquals(expectedAmount, intersections, "Wrong amount of intersections");
+        assertEquals(expectedAmount, intersections, "Wrong amount of intersections"); // check if the amount of intersections is equal to the expected amount
     }
 
 
