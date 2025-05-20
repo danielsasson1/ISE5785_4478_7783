@@ -15,18 +15,18 @@ class ImageWriterTest {
             for (int j = 0; j < 500; j++) {
                 imageWriter.writePixel(i, j, new Color(0, 153, 148));
             }
-        }
+        }//a for loop to write the pixels of the background
         for (int i = 0; i < 800; i += 50) {
             for (int j = 0; j < 500; j++) {
                 imageWriter.writePixel(i, j, new Color(188, 0, 201));
             }
-        }
+        }//a for loop to write the pixels of the vertical lines
         for (int i = 0; i < 500; i += 50) {
             for (int j = 0; j < 800; j++) {
                 imageWriter.writePixel(j, i, new Color(188, 0, 201));
             }
-        }
-        imageWriter.writeToImage("TestImage");
+        }//a for loop to write the pixels of the horizontal lines
+        imageWriter.writeToImage("TestImage");//Write the image to a file
     }
 
 

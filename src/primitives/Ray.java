@@ -1,5 +1,7 @@
 package primitives;
 
+import java.util.List;
+
 public class Ray {
     protected final Point point;
     protected final Vector vector;
@@ -32,4 +34,18 @@ public class Ray {
     public Vector getVector() {
         return vector;
     } // getter for the vector
+
+    public Point findClosestPoint (List<Point> points) {
+        if (points == null || points.isEmpty()) return null; // check if the list is empty
+        Point closestPoint = points.get(0); // set the first point as the closest point
+        double minDistance = point.distance(closestPoint); // set the minimum distance to the distance from the first point
+        for (int i = 1; i < points.size(); i++) { // iterate over the points
+            double distance = point.distance(points.get(i)); // get the distance from the point to the ray
+            if (distance < minDistance) { // check if the distance is smaller than the minimum distance
+                minDistance = distance; // set the minimum distance to the new distance
+                closestPoint = points.get(i); // set the closest point to the new point
+            }
+        }
+        return closestPoint; // return the closest point
+    } // find the closest point on a list of points
 }

@@ -67,5 +67,13 @@ class PlaneTest {
         ray = new Ray(new Point(0, 0, 0), new Vector(-1, -1, -1));
         intersections = plane.findIntersections(ray);
         assertNull(intersections, "findIntersections should return null for a ray that is orthogonal to the plane and negative to the plane");
+        // TC08: Test the findIntersections method with a ray that starts in the plane.
+        ray = new Ray(new Point(0, 3, 0), new Vector(1, 1, 1));
+        intersections = plane.findIntersections(ray);
+        assertNull(intersections, "findIntersections should return null for a ray that starts in the plane");
+        // TC09: Test the findIntersections method with a ray that starts the Q point of the plane.
+        ray = new Ray(new Point(3, 0, 0), new Vector(1, 1, 1));
+        intersections = plane.findIntersections(ray);
+        assertNull(intersections, "findIntersections should return null for a ray that starts in the Q point of the plane");
     }
 }
