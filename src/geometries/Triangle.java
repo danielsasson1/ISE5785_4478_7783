@@ -3,7 +3,8 @@ import primitives.Point;
 import primitives.Ray;
 import java.util.List;
 import primitives.Vector;
-/*
+
+/**
  * Triangle class represents a triangle in 3D space.
  * It extends the Polygon class and is defined by three points.
  */

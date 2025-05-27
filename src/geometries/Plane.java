@@ -13,8 +13,14 @@ import primitives.Util;
  * calculate the normal vector at a given point on the plane.
  */
 public class Plane extends Geometry {
-    private final Point point;
-    private final Vector normal;
+    /**
+     * The point on the plane
+     */
+    private final Point point;// a point on the plane
+    /**
+     * The normal vector to the plane
+     */
+    private final Vector normal;// a normal vector to the plane
     /**
      * Constructor for Plane class
      * @param point a point on the plane

@@ -10,7 +10,10 @@ import java.util.List;
  * It extends the Tube class and adds a height property.
  */
 public class Cylinder extends Tube {
-    private final double height;
+    /**
+     * The height of the cylinder
+     */
+    private final double height;// height of the cylinder
     /**
      * Constructor for Cylinder
      * @param axis - the axis of the cylinder

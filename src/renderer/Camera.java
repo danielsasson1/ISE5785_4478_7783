@@ -3,49 +3,62 @@ import primitives.*;
 import java.util.MissingResourceException;
 import scene.Scene;
 
+/**
+ * Camera class represents a camera in 3D space.
+ * It is used to render a scene from a specific point of view.
+ */
 public class Camera implements Cloneable {
-    /**
-     * @param p0 The direction the camera is looking at
-     * @param vTo The up direction of the camera
-     * @param vUp The right direction of the camera
-     * @param vRight The right direction of the camera
-     * @param width The width of the camera
-     * @param height The height of the camera
-     * @param distance The distance of the camera from the view plane
-     */
-    private Point p0; // the position of the camera
-    private Vector vTo; // the direction the camera is looking at
-    private Vector vUp; // the up direction of the camera
-    private Vector vRight; // the right direction of the camera
-    private double width = 0; // the width of the camera, default is 0
-    private double height = 0; // the height of the camera
-    private double distance = 0; // the distance of the camera from the view plane
-    private Point VP_Center;
 
-    /**
-     * @param imageWriter The image writer to write the image to
-     * @param rayTracer The ray tracer to trace the rays
-     * @param nX resolution in the x direction
-     * @param nY resolution in the y direction
-     */
-    private ImageWriter imageWriter;
-    private RayTracerBase rayTracer;
-    private int nX = 1;
-    private int nY = 1;
+    /**p0 is the position of the camera in 3D space.*/
+    private Point p0; // the position of the camera
+    /**vTo is the direction the camera is looking at.*/
+    private Vector vTo; // the direction the camera is looking at
+    /**vUp is the up direction of the camera.*/
+    private Vector vUp; // the up direction of the camera
+    /**vRight is the right direction of the camera.*/
+    private Vector vRight; // the right direction of the camera
+    /**width is the width of the camera's view plane.*/
+    private double width = 0; // the width of the camera, default is 0
+    /**height is the height of the camera's view plane.*/
+    private double height = 0; // the height of the camera
+    /**distance is the distance of the camera from the view plane.*/
+    private double distance = 0; // the distance of the camera from the view plane
+    /**VP_Center is the center of the view plane.*/
+    private Point VP_Center; // the center of the view plane
+
+    /**imageWriter is the image writer of the camera.*/
+    private ImageWriter imageWriter; // the image writer of the camera
+    /**rayTracer is the ray tracer of the camera.*/
+    private RayTracerBase rayTracer; // the ray tracer of the camera
+
+    /** nX is the number of pixels in the x direction.*/
+    private int nX = 1; // the number of pixels in the x direction
+    /** nY is the number of pixels in the y direction.*/
+    private int nY = 1; // the number of pixels in the y direction
 
 
     /**
      * Constructor for Camera
-     * the position of the camera
-     * the direction the camera is looking at
-     * the up direction of the camera
      */
     private Camera() {
     } // constructor
 
+    /**
+     * Builder class for Camera
+     * It is used to create a camera with specific parameters.
+     */
     public static class Builder {
+        /**
+         *  the camera to build
+         */
         private final Camera camera;
 
+        /**
+         * Constructor for Builder
+         * @param p0 the position of the camera
+         * @param vTo the direction the camera is looking at
+         * @param vUp the up direction of the camera
+         */
         public Builder(Point p0, Vector vTo, Vector vUp) {
             camera = new Camera();
             camera.p0 = p0;
@@ -53,36 +66,35 @@ public class Camera implements Cloneable {
             camera.vUp = vUp.normalize();
         }
 
-        /*
+        /**
          * Set the width of the camera
-         * @param p0 the position of the camera
-         * @param vTo the direction the camera is looking at
-         * @param vUp the up direction of the camera
-         * @param vRight the right direction of the camera
+         * @param camera the camera to set
          */
         public Builder(Camera camera) {
             this.camera = camera;
         }
 
-        /*
-         * Set the height of the camera
-         * @param camera the camera to set
+        /**
+         * Default constructor for Builder
+         * Initializes a new camera with default values.
          */
         public Builder() {
             this.camera = new Camera();
         }
 
-        /*
+        /**
          * set the camera to a new camera
+         * @param p0 the position of the camera
          */
         public Builder setLocation(Point p0) {
             camera.p0 = p0;
             return this;
         }
 
-        /*
-         * set p0 to a new point
-         * @param p0 the point to set
+        /**
+         * set the direction of the camera
+         * @param vTo the direction of the camera
+         * @param vUp the up direction of the camera
          * @return the camera
          */
         public Builder setDirection(Vector vTo, Vector vUp) {
@@ -92,11 +104,11 @@ public class Camera implements Cloneable {
             return this;
         }
 
-        /*
-         * set the To direction of the camera
-         * @param vTo the up direction of the camera
-         * @param vUp the right direction of the camera
-         * @return the camera
+        /**
+         * set the direction of the camera
+         * @param Point_Direction the direction of the camera
+         * @param vUp the up direction of the camera
+         * @return this
          */
         public Builder setDirection(Point Point_Direction, Vector vUp) {
             camera.vUp = vUp.normalize();
@@ -107,11 +119,9 @@ public class Camera implements Cloneable {
             return this;
         }
 
-        /*
-         * set the Direction of the camera
-         * @param vTo the distance of the camera
-         * @param vUp the right direction of the camera
-         * @param vRight the right direction of the camera
+        /**
+         * set the direction of the camera
+         * @param Point_Direction the direction of the camera
          * @return this
          */
         public Builder setDirection(Point Point_Direction) {
@@ -121,35 +131,28 @@ public class Camera implements Cloneable {
             camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
             return this;
         }
-        /*
-         * set the direction of the camera
-         * @param vTo the direction of the camera
-         * @param vUp the up direction of the camera
-         * @param vRight the right direction of the camera
+
+        /**
+         * set the size of the view plane
+         * @param width the width of the view plane
+         * @param height the height of the view plane
          * @return this
          */
-
         public Builder setVpSize(double width, double height) {
             camera.width = width;
             camera.height = height;
             return this;
         }
-        /*
-         * set the size of the view plane
-         * @param width the width of the camera
-         * @param height the height of the camera
+
+        /**
+         * set the distance of the camera from the view plane
+         * @param distance the distance of the camera from the view plane
          * @return this
          */
-
         public Builder setVpDistance (double distance) {
             camera.distance = distance;
             return this;
         }
-        /*
-         * set the distance of the camera
-         * @param distance the distance of the camera
-         * @return this
-         */
 
         /**
          * set the resolution of the camera
@@ -162,13 +165,12 @@ public class Camera implements Cloneable {
             camera.nY = nY;
             return this;
         }
-        /*
-         * set the resolution of the camera
-         * @param nX the number of pixels in the x direction
-         * @param nY the number of pixels in the y direction
-         * @return this
-         */
 
+
+        /**
+         * build the camera
+         * @return the camera
+         */
         public Camera build() {
             final String className = "Camera";
             final String description = "Values are not set";
@@ -238,70 +240,78 @@ public class Camera implements Cloneable {
         }
     }
 
-    public Point getP0() {
-        return p0;
-    }
-    /*
+    /**
      * get the position of the camera
      * @return the position of the camera
      */
+    public Point getP0() {
+        return p0;
+    }
 
+    /**
+     * get the direction the camera is looking at
+     * @return the position of the camera
+     */
     public Vector getVTo() {
         return vTo;
     }
-    /*
-     * get the direction the camera is looking at
-     * @return the direction the camera is looking at
-     */
 
-    public Vector getVUp() {
-        return vUp;
-    }
-    /*
+    /**
      * get the up direction of the camera
      * @return the up direction of the camera
      */
-
-    public Vector getVRight() {
-        return vRight;
+    public Vector getVUp() {
+        return vUp;
     }
-    /*
+
+    /**
      * get the right direction of the camera
      * @return the right direction of the camera
      */
-
-    public double getWidth() {
-        return width;
+    public Vector getVRight() {
+        return vRight;
     }
-    /*
+
+    /**
      * get the width of the camera
      * @return the width of the camera
      */
-
-    public double getHeight() {
-        return height;
+    public double getWidth() {
+        return width;
     }
-    /*
+
+    /**
      * get the height of the camera
      * @return the height of the camera
      */
+    public double getHeight() {
+        return height;
+    }
 
+    /**
+     * get the center of the view plane
+     * @return the center of the view plane
+     */
     public double getDistance() {
         return distance;
     }
-    /*
-     * get the distance of the camera
-     * @return the distance of the camera
-     */
 
+    /**
+     * get a builder for the camera
+     * @return a new builder for the camera
+     */
     public static Builder getBuilder() {
         return new Builder();
     }
-    /*
-     * get the builder of the camera
-     * @return the builder of the camera
-     */
 
+    /**
+     * construct a ray from the camera to the point on the view plane
+     * @param nX the number of pixels in the x direction
+     * @param nY the number of pixels in the y direction
+     * @param j the x coordinate of the pixel
+     * @param i the y coordinate of the pixel
+     * @return the ray from the camera to the point on the view plane
+     */
     public Ray constructRay(int nX, int nY, int j, int i) {
         Point Pij = this.VP_Center; // the point on the view plane
         double Yi = -(i - (nY - 1) / 2d) * (height / nY); // the y coordinate of the point on the view plane
@@ -310,15 +320,11 @@ public class Camera implements Cloneable {
         if(!Util.isZero(Yi)) Pij = Pij.add(vUp.scale(Yi)); // if the y coordinate is not zero, add the up direction of the camera
         return new Ray(p0, Pij.subtract(p0)); // return the ray from the camera to the point on the view plane
     }
-    /*
-     * construct a ray from the camera to the point on the view plane
-     * @param nX the number of pixels in the x direction
-     * @param nY the number of pixels in the y direction
-     * @param j the x coordinate of the pixel
-     * @param i the y coordinate of the pixel
-     * @return the ray from the camera to the point on the view plane
-     */
 
+    /**
+     * render the image
+     * @return the camera
+     */
     public Camera renderImage() {
         for (int i = 0; i < nY; i++) { // iterate over the view plane
             for (int j = 0; j < nX; j++) { // iterate over the view plane
@@ -327,10 +333,6 @@ public class Camera implements Cloneable {
         }
         return this; // return the camera
     }
-    /**
-     * render the image
-     * @return the camera
-     */
 
     /**
      * print the grid on the image
@@ -359,11 +361,6 @@ public class Camera implements Cloneable {
         return this;
     }
 
-    private void castRay(int nX, int nY, int i, int j) {
-        Ray ray = constructRay(nX, nY, j, i);// construct the ray from the camera to the point on the view plane
-        Color color = rayTracer.traceRay(ray);// trace the ray
-        imageWriter.writePixel(j, i, color);// write the pixel to the image
-    }
     /**
      * cast a ray from the camera to the point on the view plane
      * @param nX the number of pixels in the x direction
@@ -371,6 +368,7 @@ public class Camera implements Cloneable {
      * @param i the x coordinate of the pixel
      * @param j the y coordinate of the pixel
      */
-
-
+    private void castRay(int nX, int nY, int i, int j) {
+        imageWriter.writePixel(j, i, rayTracer.traceRay(constructRay(nX, nY, j, i)));// write the pixel to the image
+    }
 }

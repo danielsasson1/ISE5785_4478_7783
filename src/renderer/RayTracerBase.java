@@ -4,9 +4,13 @@ import scene.Scene;
 import primitives.Color;
 import primitives.Ray;
 
+/**
+ * RayTracerBase class is an abstract base class for ray tracing algorithms.
+ * It provides a common interface for all ray tracers and holds a reference to the scene being rendered.
+ */
 public abstract class RayTracerBase {
     /**
-     * @param scene The scene to be rendered
+     * //@param scene The scene to be rendered
      */
     protected final Scene scene;
     /**

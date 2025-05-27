@@ -11,7 +11,10 @@ import java.util.List;
  * It extends the RadialGeometry class
  */
 public class Sphere extends RadialGeometry {
-    private final Point center;
+    /**
+     * The center of the sphere
+     */
+    private final Point center;// the center of the sphere
     /**
      * Getter for the center of the sphere
      * @return the center of the sphere

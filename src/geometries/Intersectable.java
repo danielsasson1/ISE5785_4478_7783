@@ -10,10 +10,8 @@ import primitives.Vector;
  * It provides methods to find intersection points and calculate the normal vector at a given point.
  */
 public interface Intersectable {
-    public List<Point> findIntersections(Ray ray);
     /**
-     * Finds the intersection points of a ray with the geometry.
-     * @param ray the ray to check for intersections
-     * @return a list of intersection points
+     * Calculates the normal vector at a given point on the geometry.
      */
+    public List<Point> findIntersections(Ray ray);//a ray to check for intersections
 }

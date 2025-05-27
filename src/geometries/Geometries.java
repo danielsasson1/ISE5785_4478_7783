@@ -4,9 +4,15 @@ import primitives.Point;
 import java.util.LinkedList;
 import java.util.List;
 
-
+/**
+ * Geometries class represents a collection of intersectable geometries.
+ * It implements the Intersectable interface and provides methods to add geometries and find intersections with a ray.
+ */
 public class Geometries implements Intersectable{
-    private final List<Intersectable> geometries = new LinkedList<>();
+    /**
+     * List of intersectable geometries
+     */
+    private final List<Intersectable> geometries = new LinkedList<>();// List of intersectable geometries
 
     /**
      * Constructor for Geometries
@@ -14,7 +20,7 @@ public class Geometries implements Intersectable{
     public Geometries() { }
 
     /**
-     *
+     * Constructor for Geometries num2
      * @param geometries the geometries to add
      */
     public Geometries(Intersectable... geometries) {

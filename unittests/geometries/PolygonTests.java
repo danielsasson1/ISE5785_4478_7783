@@ -89,6 +89,7 @@ class PolygonTests {
                       "Polygon's normal is not orthogonal to one of the edges");
    }
 
+
    @Test
     void testFindIntersections() {
       Polygon mesh = new Polygon(new Point(1, 1, 0), new Point(1, 0, 0), new Point(-1,-1,0), new Point(0, 1, 0));
