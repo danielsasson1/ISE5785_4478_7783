@@ -16,20 +16,14 @@ public abstract class RadialGeometry extends Geometry {
      */
     protected final double radiusSquared;// the square of the radius
     /**
-     * Getter for radius squared
-     * @return the square of the radius
-     */
-    /**
      * Constructor for RadialGeometry
      * @param radius the radius of the geometry
      */
     public RadialGeometry (double radius) {
+        if (radius <= 0) {
+            throw new IllegalArgumentException("Radius must be greater than zero");
+        }
         this.radius = radius;
         radiusSquared = radius * radius;
     }
-    /**
-     * Getter for radius
-     * @return the radius of the geometry
-     */
-
 }

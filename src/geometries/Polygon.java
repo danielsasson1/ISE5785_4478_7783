@@ -82,43 +82,25 @@ public class Polygon extends Geometry {
     public Vector getNormal(Point point) { return plane.getNormal(point); }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        // Check if the ray is in the same plane as the polygon
-        List<Vector> normals = new LinkedList<>();
-        final Point p0 = ray.getPoint(0);
-        final Vector v = ray.getVector();
-        Vector v1 = vertices.getFirst().subtract(p0);
-        for (Point vertex : vertices.subList(1, size)) {
-            Vector v2 = vertex.subtract(p0);
-            normals.add(v1.crossProduct(v2).normalize());
-            v1 = v2;
-        }
-        normals.add(vertices.getLast().subtract(p0).crossProduct(vertices.getFirst().subtract(p0)).normalize());
-        // Check if the ray is in the same plane as the polygon
-        boolean Positive = v.dotProduct(normals.getFirst()) > 0;
-        for (Vector normal : normals) {
-            double s = v.dotProduct(normal);
-            if (Util.isZero(s) || s > 0 != Positive) {
-                return null; // The ray is not in the same plane as the polygon
-            }
-        }
-        Plane plane = new Plane(vertices.getFirst(), vertices.get(1), vertices.get(2));
-        // Find the intersection point of the ray and the plane
-        return plane.findIntersections(ray);
-        /*
-        long explanation about this method:
-        1. The method first checks if the ray is in the same plane as the polygon by
-        calculating the normals of the edges of the polygon and checking if the dot
-        product of the ray's direction vector and the normals is positive for all
-        edges. If the dot product is zero or negative for any edge, the ray is not in
-        the same plane as the polygon and the method returns null.
-        2. If the ray is in the same plane as the polygon, the method creates a new
-        Plane object using the first three vertices of the polygon and calls the
-        findIntersections method of the Plane class to find the intersection point of
-        the ray and the plane.
-        3. The method returns the list of intersection points found by the Plane
-        class.
-         */
-    }
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
+        List<Intersection> intersections = plane.calculateIntersectionsHelper(ray);
+        if (intersections == null) return null; // No intersection with the plane
 
+        //checks if the intersection point is inside the polygon
+        Point intersectionPoint = intersections.get(0).point;
+        if (intersectionPoint.equals(vertices.get(0))) return null; // The intersection point is a vertex of the polygon
+        Vector v1 = vertices.get(1).subtract(vertices.get(0)); // Edge vector from vertex 0 to vertex 1
+        Vector v2 = intersectionPoint.subtract(vertices.get(0)); // Vector between vertex 0 and the intersection point
+        if (v1.normalize().equals(v2.normalize()) || v1.normalize().equals(v2.normalize().scale(-1))) return null; // The intersection point is on the edge of the polygon
+        boolean positive = (v1.crossProduct(v2)).dotProduct(plane.getNormal(intersectionPoint)) > 0; // Determine the direction of the polygon
+        for (int i = 1; i < size; i++) {
+            if (intersectionPoint.equals(vertices.get(i))) return null; // The intersection point is a vertex of the polygon
+            v1 = vertices.get((i + 1) % size).subtract(vertices.get(i)); // Edge vector from vertex i to vertex (i+1)%size
+            v2 = intersectionPoint.subtract(vertices.get(i));// Update v2 the vector between the vertex and the intersection point
+            if (v1.normalize().equals(v2.normalize()) || v1.normalize().equals(v2.normalize().scale(-1))) return null; // The intersection point is on the edge of the polygon
+            if (positive != (v1.crossProduct(v2).dotProduct(plane.getNormal(intersectionPoint)) > 0)) return null; // The intersection point is outside the polygon
+        }
+        // If we reach here, the intersection point is inside the polygon
+        return intersections; // Return the intersection point with the polygon
+    }
 }

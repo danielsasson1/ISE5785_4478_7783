@@ -12,24 +12,24 @@ class TubeTests {
 
     @Test
     void constructor() {
-        // Test invalid radius
         //TC01
         assertDoesNotThrow( () -> new Tube(new Ray(new Point(1, 2, 3), new Vector(1, 0, 0)), 5),"Failed to create a tube with valid parameters");
+        //TC02 invalid parameters
+        assertThrows(IllegalArgumentException.class, () -> new Tube(new Ray(new Point(1, 2, 3), new Vector(1, 0, 0)), -5), "Failed to throw exception for negative radius");
     }
+
     @Test
     void testGetNormal() {
-        Tube t1 = new Tube(new Ray(new Point(0, 0, 0), new Vector(1, 1, 0)),1);
-        Point p1=new Point(3,3,1);
-        Point p2=new Point(0,0,-1);
-        Vector normalP1 =new Vector(0,0,1);
-        Vector normalP2 =new Vector(0,0,-1);
-
-        // ============ Equivalence Partitions Tests ==============
-        //TC01: Testing the getNormal with random Tube and random point
-        assertEquals(normalP1,t1.getNormal(p1),"ERROR: getNormal of tube doesn't work properly (TC01)");
-
-        // =============== Boundary Values Tests ==================
-        //TC02: Testing the getNormal with a point that is the closest to the head of the ray
-        assertEquals(normalP2,t1.getNormal(p2),"ERROR: getNormal of tube doesn't work properly (TC02)");
+        // ============= Equivalence Partitioning Tests =============
+        Tube t1 = new Tube(new Ray(new Point(0, 0, 0), new Vector(1, 0, 0)), Math.sqrt(3));
+        //TC01 point on the side surface of the tube
+        assertEquals(new Vector(0, 1, 0), t1.getNormal(new Point(5, 5, 0)), "Failed to get normal vector for point on the side surface of the tube");
+        //TC02 point on the downside of the tube
+        assertEquals(new Vector(-1, 0, 0), t1.getNormal(new Point(-1, 15, 0)), "Failed to get normal vector for point on the downside of the tube");
+        //=============== Boundary Values Tests ==================
+        //TC03 point is the center of the tube
+        assertNull(t1.getNormal(new Point(0, 0, 0)), "Failed to get normal vector for point at the center of the tube");
+        //TC04 point on the axis of the tube
+        assertNull(t1.getNormal(new Point(5, 0, 0)), "Failed to get normal vector for point on the axis of the tube");
     }
 }

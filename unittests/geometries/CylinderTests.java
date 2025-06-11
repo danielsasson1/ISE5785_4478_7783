@@ -11,30 +11,27 @@ import primitives.Point;
 class CylinderTests {
     @Test
     void constructor() {
-        // Test invalid radius
+        // Test valid radius
         //TC01
         assertDoesNotThrow(() -> new Cylinder(new Ray(new Point(1, 2, 3), new Vector(1, 0, 0)), 5, 10), "Failed to create a cylinder with valid parameters");
+        //TC02 Test invalid radius
+        assertThrows(IllegalArgumentException.class, () -> new Cylinder(new Ray(new Point(1, 2, 3), new Vector(1, 0, 0)), -5, 10), "Failed to throw exception for negative radius");
+        assertThrows(IllegalArgumentException.class, () -> new Cylinder(new Ray(new Point(1, 2, 3), new Vector(1, 0, 0)), 5, -10), "Failed to throw exception for negative radius");
     }
     @Test
     void getNormal () {
-        Cylinder c1 = new Cylinder(new Ray(new Point(0, 0, 0), new Vector(1, 1, 0)), 1, 5);
-        Point p1 = new Point(3, 3, 1);
-        Point p2 = new Point(0, 0, -1);
-        Vector normalP1 = new Vector(0, 0, 1);
-        Vector normalP2 = new Vector(0, 0, -1);
-
-        // ============ Equivalence Partitions Tests ==============
-        //TC01: Testing the getNormal with random Cylinder and random point
-        assertEquals(normalP1, c1.getNormal(p1), "ERROR: getNormal of cylinder doesn't work properly (TC01)");
-
-        // =============== Boundary Values Tests =================
-        //TC02 the point is on the side outer surface of the cylinder
-        assertEquals(normalP1, c1.getNormal(new Point(3, 3, 1)), "ERROR: getNormal of cylinder doesn't work properly in the side outer surface (TC02)");
-        //TC03 the point is on the side inner surface of the cylinder
-        assertEquals(normalP1, c1.getNormal(new Point(3, 3, 1)), "ERROR: getNormal of cylinder doesn't work properly side inner surface (TC03)");
-        //TC04 the point is on the top base of the cylinder
-        assertEquals(normalP1, c1.getNormal(new Point(3, 3, 5)), "ERROR: getNormal of cylinder doesn't work properly on the top base (TC04)");
-        //TC05 the point is on the bottom base of the cylinder
-        assertEquals(normalP2, c1.getNormal(new Point(3, 3, -1)), "ERROR: getNormal of cylinder doesn't work properly on the bottom base (TC05)");
+        // ============= Equivalence Partitioning Tests =============
+        //TC01: Test normal at the side of the cylinder
+        Cylinder cylinder = new Cylinder(new Ray(new Point(0, 0, 0), new Vector(1, 0, 0)), Math.sqrt(3), 10);
+        assertEquals(new Vector(0, 1, 0), cylinder.getNormal(new Point(5, 1, 0)), "Failed to get normal at the side of the cylinder");
+        //TC02: Test normal at the bottom base of the cylinder
+        assertEquals(new Vector(-1, 0, 0), cylinder.getNormal(new Point(-4, 5, 0)), "Failed to get normal at the bottom base of the cylinder");
+        //TC03: Test normal at the top base of the cylinder
+        assertEquals(new Vector(1, 0, 0), cylinder.getNormal(new Point(11, 5, 10)), "Failed to get normal at the top base of the cylinder");
+        // =============== Boundary Values Tests ==================
+        //TC04: Test normal at the center of the bottom base
+        assertNull(cylinder.getNormal(new Point(0, 0, 0)), "Failed to get normal at the center of the bottom base");
+        //TC05: Test normal on the axis of the cylinder
+        assertNull(cylinder.getNormal(new Point(5, 0, 0)), "Failed to get normal on the axis of the cylinder");
     }
 }

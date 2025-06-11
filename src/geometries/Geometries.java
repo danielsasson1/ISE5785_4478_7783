@@ -8,7 +8,7 @@ import java.util.List;
  * Geometries class represents a collection of intersectable geometries.
  * It implements the Intersectable interface and provides methods to add geometries and find intersections with a ray.
  */
-public class Geometries implements Intersectable{
+public class Geometries extends Intersectable{
     /**
      * List of intersectable geometries
      */
@@ -20,7 +20,7 @@ public class Geometries implements Intersectable{
     public Geometries() { }
 
     /**
-     * Constructor for Geometries num2
+     * Constructor for Geometries
      * @param geometries the geometries to add
      */
     public Geometries(Intersectable... geometries) {
@@ -35,16 +35,13 @@ public class Geometries implements Intersectable{
         for (Intersectable geometry : geometries)
             this.geometries.add(geometry);
     }
-    /**
-     * Find intersections with the given ray
-     * @param ray the ray to check for intersections
-     * @return a list of intersection points
-     */
+
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        List<Point> intersections = null;
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
+        List<Intersection> intersections = null;
+        List<Intersection> geometryIntersections;
         for (Intersectable geometry : geometries) {
-            List<Point> geometryIntersections = geometry.findIntersections(ray);
+            geometryIntersections = geometry.calculateIntersectionsHelper(ray);
             if (geometryIntersections != null) {
                 if (intersections == null) {
                     intersections = new LinkedList<>();
@@ -54,13 +51,4 @@ public class Geometries implements Intersectable{
         }
         return intersections;
     }
-    /**
-     * Get the list of geometries
-     * @return the list of geometries
-     */
 }
-//javadoc:
-/**
- * Geometries class represents a collection of intersectable geometries.
- * It implements the Intersectable interface and provides methods to add geometries and find intersections with a ray.
- */

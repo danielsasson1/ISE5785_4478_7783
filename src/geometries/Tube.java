@@ -12,10 +12,6 @@ public class Tube extends RadialGeometry{
      * The axis of the tube
      */
     protected final Ray axis;// the axis of the tube
-    /**
-     * Constructor for Tube
-     * @param axis the axis of the tube
-     */
 
     /**
      * Constructor for Tube
@@ -26,29 +22,20 @@ public class Tube extends RadialGeometry{
         super(radius);
         this.axis = axis;
     }
-
-    /**
-     * Getter for the axis of the tube
-     * @return the axis of the tube
-     */
-    //@Override
+    @Override
     public Vector getNormal(Point point) {
-        // Calculate the vector from the axis head to the given point
-        Vector headToPoint = point.subtract(axis.getPoint(0));
-        // Calculate the projection of the head-to-point vector onto the axis direction
-        double t = headToPoint.dotProduct(axis.getVector());
-        if (t != 0) {
-            // Calculate the point on the axis that is closest to the given point
-            Point o = axis.getPoint(0).add(axis.getVector().scale(t));
-            // Calculate the vector from the closest point on the axis to the given point and normalize it
-            return point.subtract(o).normalize();
-        } else {
-            //if t=0 we don't need to create the point o, we already have the closest point on the axis to the given point
-            return point.subtract(axis.getPoint(0));
+        Vector axisDirection = axis.getVector();
+        Point C = axis.getPoint(0);
+        if (C.equals(point)) return null; // Normal is undefined at the bottom base center
+        double t = point.subtract(C).dotProduct(axisDirection);
+        if (t < 0) {
+            return axisDirection.scale(-1); // Normal atthe bottom base
         }
+        Point o = C.add(axisDirection.scale(t));
+        if (point.equals(o)) return null; // Normal is undefined at the point on the axis
+        return point.subtract(o).normalize();
     }
 
-    public List<Point> findIntersections(Ray ray) {
-        return null;
-    } // finding the intersection points
+    @Override
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {return null;} // finding the intersection points
 }

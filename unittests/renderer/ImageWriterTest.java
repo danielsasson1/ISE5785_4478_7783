@@ -13,12 +13,12 @@ class ImageWriterTest {
         ImageWriter imageWriter = new ImageWriter(800, 500);
         for (int i = 0; i < 800; i++) {
             for (int j = 0; j < 500; j++) {
-                imageWriter.writePixel(i, j, new Color(0, 153, 148));
+                imageWriter.writePixel(i, j, new Color(java.awt.Color.YELLOW));
             }
         }//a for loop to write the pixels of the background
         for (int i = 0; i < 800; i += 50) {
             for (int j = 0; j < 500; j++) {
-                imageWriter.writePixel(i, j, new Color(188, 0, 201));
+                imageWriter.writePixel(i, j, new Color(java.awt.Color.RED));
             }
         }//a for loop to write the pixels of the vertical lines
         for (int i = 0; i < 500; i += 50) {
@@ -28,7 +28,4 @@ class ImageWriterTest {
         }//a for loop to write the pixels of the horizontal lines
         imageWriter.writeToImage("TestImage");//Write the image to a file
     }
-
-
-
 }

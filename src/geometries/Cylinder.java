@@ -2,7 +2,6 @@ package geometries;
 import primitives.Ray;
 import primitives.Vector;
 import primitives.Point;
-
 import java.util.List;
 
 /**
@@ -13,12 +12,8 @@ public class Cylinder extends Tube {
     /**
      * The height of the cylinder
      */
-    private final double height;// height of the cylinder
-    /**
-     * Constructor for Cylinder
-     * @param axis - the axis of the cylinder
-     * @param radius - the radius of the cylinder
-     */
+    private final double height;
+
     /**
      * Constructor for Cylinder
      * @param axis - the axis of the cylinder
@@ -27,47 +22,29 @@ public class Cylinder extends Tube {
      */
     public Cylinder (Ray axis, double radius, double height) {
         super(axis, radius);
+        if (height <= 0) {
+            throw new IllegalArgumentException("Radius must be greater than zero");
+        }
         this.height = height;
-        /*
-        @param axis - the axis of the cylinder
-        @param radius - the radius of the cylinder
-        @param height - the height of the cylinder
-        The constructor initializes the cylinder with the given axis, radius, and height.
-         */
     }
 
-    /**
-     * Getter for the height of the cylinder
-     * @return the height of the cylinder
-     */
-    //@Override
+    @Override
     public Vector getNormal(Point point) {
-        // If p0 is the head of the axis
-        if (point.equals(axis.getPoint(0)))
-            return axis.getVector().scale(-1);
-
-        // If p1 is the end of the axis
-        if (point.equals(axis.getPoint(0).add(axis.getVector().scale(height))))
-            return axis.getVector();
-
-        // If the point is on the top or bottom surface of the cylinder
-        if (axis.getPoint(0).subtract(point).dotProduct(axis.getVector()) == 0)
-            return axis.getVector().scale(-1);
-
-        if (axis.getPoint(0).add(axis.getVector().scale(height)).subtract(point).dotProduct(axis.getVector()) == 0)
-            return axis.getVector();
-
-        // Otherwise, call the superclass method
-        return super.getNormal(point);
-
+        Vector axisDirection = axis.getVector();
+        Point C = axis.getPoint(0);
+        if (C.equals(point)) return null; // Normal is undefined at the bottom base center
+        double t = point.subtract(C).dotProduct(axisDirection);
+        if (t < 0) {
+            return axisDirection.scale(-1); // Normal atthe bottom base
+        }
+        if (t > height) {
+            return axisDirection; // Normal at the top base
+        }
+        Point o = C.add(axisDirection.scale(t));
+        if (point.equals(o)) return null; // Normal is undefined at the point on the axis
+        return point.subtract(o).normalize();
     }
-    //javadoc
-    /**
-     * Getter for the height of the cylinder
-     * @return the height of the cylinder
-     */
 
-    public List<Point> findIntersections(Ray ray) {
-        return null;
-    } // finding the intersection points
+    @Override
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {return null;}
 }
