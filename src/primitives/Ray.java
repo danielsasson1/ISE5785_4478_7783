@@ -27,22 +27,13 @@ public class Ray {
         vector = v1.normalize();
     } // constructor
 
-    /**
-     * Checks if two rays are equal.
-     * @param obj is the object to compare with
-     * @return true if the rays are equal, false otherwise
-     */
-    //@Override
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         return obj instanceof Ray other && point.equals(other.point) && vector.equals(other.vector);
     } // checking if the object is the same
 
-    /**
-     * Returns a string representation of the ray.
-     * @return a string representation of the ray
-     */
-    //@Override
+    @Override
     public String toString() {
         return "Ray" + point + vector;
     } // overriding the toString method

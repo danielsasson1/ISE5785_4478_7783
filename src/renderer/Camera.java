@@ -100,7 +100,6 @@ public class Camera implements Cloneable {
         public Builder setDirection(Vector vTo, Vector vUp) {
             camera.vTo = vTo.normalize();
             camera.vUp = vUp.normalize();
-            // calculate the right direction of the camera
             return this;
         }
 
@@ -314,7 +313,7 @@ public class Camera implements Cloneable {
      */
     public Ray constructRay(int nX, int nY, int j, int i) {
         Point Pij = this.VP_Center; // the point on the view plane
-        double Yi = -(i - (nY - 1) / 2d) * (height / nY); // the y coordinate of the point on the view plane
+        double Yi = -(i - (nY - 1) / 2d) * (height / nY); // the y coordinate of the point on the view plane, negative because the y axis is inverted in the view plane
         double Xj = (j - (nX - 1) / 2d) * (width / nX); // the x coordinate of the point on the view plane
         if(!Util.isZero(Xj)) Pij = Pij.add(vRight.scale(Xj)); // if the x coordinate is not zero, add the right direction of the camera
         if(!Util.isZero(Yi)) Pij = Pij.add(vUp.scale(Yi)); // if the y coordinate is not zero, add the up direction of the camera

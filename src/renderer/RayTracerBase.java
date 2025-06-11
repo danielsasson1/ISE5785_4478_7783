@@ -10,7 +10,7 @@ import primitives.Ray;
  */
 public abstract class RayTracerBase {
     /**
-     * //@param scene The scene to be rendered
+     * The scene to be rendered by the ray tracer
      */
     protected final Scene scene;
     /**
@@ -20,6 +20,7 @@ public abstract class RayTracerBase {
     public RayTracerBase(Scene scene) {
         this.scene = scene;
     }
+
     /**
      * Trace a ray through the scene
      * @param ray The ray to be traced
