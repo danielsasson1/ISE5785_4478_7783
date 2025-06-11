@@ -28,6 +28,7 @@ public class Triangle extends Polygon {
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         // Call the findIntersections method from the Polygon class
-        return super.calculateIntersectionsHelper(ray);
+        if (super.calculateIntersectionsHelper(ray) == null) return null;
+        return List.of(new Intersection(this, super.calculateIntersectionsHelper(ray).getFirst().point));
     }
 }

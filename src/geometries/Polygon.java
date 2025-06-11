@@ -83,9 +83,8 @@ public class Polygon extends Geometry {
 
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
-        List<Intersection> intersections = plane.calculateIntersectionsHelper(ray);
-        if (intersections == null) return null; // No intersection with the plane
-
+        if (plane.calculateIntersectionsHelper(ray) == null) return null; // No intersection with the plane
+        List<Intersection> intersections = List.of (new Intersection(this, plane.calculateIntersectionsHelper(ray).getFirst().point));
         //checks if the intersection point is inside the polygon
         Point intersectionPoint = intersections.get(0).point;
         if (intersectionPoint.equals(vertices.get(0))) return null; // The intersection point is a vertex of the polygon

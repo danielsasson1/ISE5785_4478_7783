@@ -1,6 +1,8 @@
 package primitives;
 
 import java.util.List;
+import geometries.Intersectable.*;
+import primitives.Point;
 
 /**
  * Ray class represents a ray in 3D space.
@@ -61,17 +63,27 @@ public class Ray {
      * @param points is the list of points to check
      * @return the closest point on the ray to the list of points
      */
-    public Point findClosestPoint (List<Point> points) {
+    public Point findClosestPoint(List<Point> points) {
+        return points == null ? null
+                : findClosestIntersection(points.stream().map(p -> new Intersection(null, p)).toList()).point;
+    }
+
+    /**
+     * Finds the closest intersection point of the ray with a list of points.
+     * @param points is the list of points to check
+     * @return the closest intersection point of the ray with the list of points
+     */
+    public Intersection findClosestIntersection(List<Intersection> points) {
         if (points == null || points.isEmpty()) return null; // check if the list is empty
-        Point closestPoint = points.get(0); // set the first point as the closest point
-        double minDistance = point.distance(closestPoint); // set the minimum distance to the distance from the first point
+        int TheFinal = 0; // set the first point as the closest point
+        double minDistance = point.distance(points.get(0).point); // set the minimum distance to the distance from the first point
         for (int i = 1; i < points.size(); i++) { // iterate over the points
-            double distance = point.distance(points.get(i)); // get the distance from the point to the ray
+            double distance = point.distance(points.get(i).point); // get the distance from the point to the ray
             if (distance < minDistance) { // check if the distance is smaller than the minimum distance
                 minDistance = distance; // set the minimum distance to the new distance
-                closestPoint = points.get(i); // set the closest point to the new point
+                TheFinal = i; // set the closest point to the new point
             }
         }
-        return closestPoint; // return the closest point
-    } // find the closest point on a list of points
+        return points.get(TheFinal); // return the closest intersection point
+    }
 }

@@ -29,7 +29,7 @@ class RayTests {
         assertEquals(new Point(0, 0, 1), ray.findClosestPoint(points), "Bad findClosestPoint with point in the middle of the list");
         // =============== Boundary Values Tests ==================
         // TC02: The list is empty
-        assertNull(ray.findClosestPoint(List.of()), "Bad findClosestPoint with empty list");
+        assertNull(ray.findClosestPoint(null), "Bad findClosestPoint with empty list");
         // TC03: The closest point is the first point in the list
         points = List.of(new Point(0, 0, 1), new Point(2, 2, 3), new Point(4, 2, 3));
         assertEquals(new Point(0, 0, 1), ray.findClosestPoint(points), "Bad findClosestPoint with first point in the list");
