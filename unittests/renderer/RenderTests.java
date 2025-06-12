@@ -15,10 +15,14 @@ import scene.Scene;
  * @author Dan
  */
 class RenderTests {
-   /** Default constructor to satisfy JavaDoc generator */
+   /**
+    * Default constructor to satisfy JavaDoc generator
+    */
    RenderTests() { /* to satisfy JavaDoc generator */ }
 
-   /** Camera builder of the tests */
+   /**
+    * Camera builder of the tests
+    */
    private final Camera.Builder camera = Camera.getBuilder() //
            .setLocation(Point.ZERO).setDirection(new Point(0, 0, -1), Vector.AXIS_Y) //
            .setVpDistance(100) //
@@ -52,6 +56,7 @@ class RenderTests {
    }
 
    // For stage 6 - please disregard in stage 5
+
    /**
     * Produce a scene with basic 3D model - including individual lights of the
     * bodies and render it into a png image with a grid
@@ -81,7 +86,9 @@ class RenderTests {
               .writeToImage("color render test");
    }
 
-   /** Test for XML based scene - for bonus */
+   /**
+    * Test for XML based scene - for bonus
+    */
    @Test
    void basicRenderXml() {
       Scene scene = new Scene("Using XML");
@@ -100,7 +107,9 @@ class RenderTests {
               .writeToImage("xml render test");
    }
 
-   /** Test for JSON based scene - for bonus */
+   /**
+    * Test for JSON based scene - for bonus
+    */
    @Test
    void basicRenderJson() {
       Scene scene = new Scene("Using Json");
@@ -117,5 +126,30 @@ class RenderTests {
               .renderImage() //
               .printGrid(100, new Color(YELLOW)) //
               .writeToImage("xml render test");
+   }
+
+   @Test
+   void MultyColor2() {
+      Scene scene = new Scene("Multi color").setAmbientLight(new AmbientLight(new Color(white)));
+      scene.geometries //
+              .add(// center
+                      new Sphere(new Point(0, 0, -100), 50).setMaterial(new Material().setKA(new Double3(0.4))),
+                      // up left
+                      new Triangle(new Point(-100, 0, -100), new Point(0, 100, -100), new Point(-100, 100, -100)) //
+                              .setMaterial(new Material().setKA(new Double3(0,0.8,0))), //
+                      // down left
+                      new Triangle(new Point(-100, 0, -100), new Point(0, -100, -100), new Point(-100, -100, -100)) //
+                              .setMaterial(new Material().setKA(new Double3(0.8,0,0))),
+                      // down right
+                      new Triangle(new Point(100, 0, -100), new Point(0, -100, -100), new Point(100, -100, -100)) //
+                              .setMaterial(new Material().setKA(new Double3(0,0,0.8))));
+
+      camera //
+              .setRayTracer(scene, RayTracerType.SIMPLE) //
+              .setResolution(1000, 1000) //
+              .build() //
+              .renderImage() //
+              .printGrid(100, new Color(WHITE)) //
+              .writeToImage("Bomb Test Render");
    }
 }

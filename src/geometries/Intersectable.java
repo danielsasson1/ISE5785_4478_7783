@@ -1,10 +1,13 @@
 package geometries;
 
 import java.util.List;
+
+import primitives.Material;
 import primitives.Ray;
 import primitives.Point;
 import primitives.Vector;
 import geometries.Geometry;
+import lighting.LightSource;
 
 
 /**
@@ -13,11 +16,29 @@ import geometries.Geometry;
  */
 public abstract class Intersectable {
     /**
-     * Calculates the normal vector at a given point on the geometry.
+     * Intersection class represents an intersection point between a ray and a geometry.
+     * It contains the geometry at the intersection point and the intersection point itself.
      */
     public static class Intersection {
+        /** The geometry at the intersection point */
         public final Geometry geometry;
+        /** The intersection point */
         public final Point point;
+        /** The material at the intersection point */
+        public final Material material;
+        /** The direction of the intersecting ray */
+        public Vector v;
+        /** The normal vector at the intersection point */
+        public Vector n;
+        /** The scalar product of the normal vector and the intersecting ray direction */
+        public double nDotV;
+        /** The light in the intersection point */
+        public LightSource light;
+        /** The direction from the light to the intersection point */
+        public Vector l;
+        /** The scalar product of the light vector and the normal */
+        public double lDotN;
+
 
         /**
          * Constructor for Intersection
@@ -27,6 +48,8 @@ public abstract class Intersectable {
         public Intersection(Geometry geometry, Point point) {
             this.geometry = geometry;
             this.point = point;
+            if (geometry != null) this.material = geometry.getMaterial();
+            else this.material = null;
         }
 
         @Override

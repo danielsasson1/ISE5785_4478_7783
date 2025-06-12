@@ -7,13 +7,7 @@ import primitives.Color;
  * It is a type of light that is present in the scene and illuminates all objects equally.
  * The intensity of the ambient light can be adjusted.
  */
-public class AmbientLight {
-
-    /**
-     * The intensity of the ambient light.
-     * It is represented as a Color object.
-     */
-    private final Color intensity; // The intensity of the ambient light
+public class AmbientLight extends Light {
 
     /**
      * A static constant representing no ambient light.
@@ -23,17 +17,10 @@ public class AmbientLight {
 
     /**
      * Constructor for AmbientLight
+     *
      * @param intensity The intensity of the ambient light.
      */
     public AmbientLight(Color intensity) {
-        this.intensity = intensity;
-    }
-
-    /**
-     * getIntensity
-     * @return The intensity of the ambient light.
-     */
-    public Color getIntensity() {
-        return intensity;
+        super(intensity);
     }
 }

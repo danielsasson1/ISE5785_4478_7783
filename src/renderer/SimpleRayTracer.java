@@ -1,10 +1,12 @@
 package renderer;
 
+import lighting.LightSource;
 import scene.Scene;
 import primitives.*;
+import primitives.Util.*;
 import geometries.Intersectable.Intersection;
-
 import java.util.List;
+
 
 /**
  * SimpleRayTracer class is a basic implementation of a ray tracer.
@@ -31,7 +33,7 @@ public class SimpleRayTracer extends RayTracerBase {
             return scene.background;
         }
         Intersection closestPoint = ray.findClosestIntersection(intersections);
-        return calcColor(closestPoint);
+        return calcColor(closestPoint, ray);
     }
 
     /**
@@ -40,9 +42,84 @@ public class SimpleRayTracer extends RayTracerBase {
      * @param point The point at which to calculate the color
      * @return The color at the specified point
      */
-    public Color calcColor(Intersection point) {
-        Color color = scene.ambientLight.getIntensity();
-        color = color.add(point.geometry.getEmission());
+    public Color calcColor(Intersection point, Ray ray) {
+        if (!preprocessIntersection(point, ray.getVector())) return Color.BLACK;
+
+        Color color = scene.ambientLight.getIntensity().scale(point.geometry.getMaterial().KA);
+        color = color.add(calcColorLocalEffects(point));
         return color;
+    }
+
+    /**
+     * Preprocesses the intersection by calculating the normal vector and the dot product with the ray direction.
+     * This method also checks if the intersection is valid by ensuring the dot product is not zero.
+     * @param intersection The intersection to preprocess
+     * @param RayDirection The direction of the ray
+     * @return true if the intersection is valid, false otherwise
+     */
+    public boolean preprocessIntersection (Intersection intersection, Vector RayDirection) {
+        intersection.v = RayDirection.normalize();
+        intersection.n = intersection.geometry.getNormal(intersection.point);
+        intersection.nDotV = intersection.n.dotProduct(RayDirection);
+        return !Util.isZero(intersection.nDotV); // Check if the intersection is valid.
+    }
+    /**
+     * Sets the light source for the intersection and calculates the direction vector and dot product with the ray direction.
+     * This method also checks if the intersection is valid by ensuring the dot product is not zero.
+     * @param intersection The intersection to set the light source for
+     * @param light The light source to be set
+     * @return true if the intersection is valid, false otherwise
+     */
+    public boolean setLightSource (Intersection intersection, LightSource light){
+        intersection.light = light;
+        intersection.l = light.getL(intersection.point);
+        intersection.lDotN = intersection.l.dotProduct(intersection.geometry.getNormal(intersection.point));
+        return !Util.isZero(intersection.lDotN); // Check if the intersection is valid.
+    }
+
+    /**
+     * Calculates the color at the intersection point considering local effects such as light sources.
+     * It iterates through all light sources in the scene and calculates the contribution of each light source
+     * to the color at the intersection point.
+     * @param intersection The intersection point to calculate the color for
+     * @return The calculated color at the intersection point
+     */
+    private Color calcColorLocalEffects(Intersection intersection) {
+        Color color = intersection.geometry.getEmission();
+        for (LightSource lightSource : scene.lights) {
+            // also checks if sign(nl) == sign(nv))
+            if (!setLightSource(intersection, lightSource) || Util.alignZero(intersection.lDotN * intersection.nDotV) <= 0 )
+                continue;
+            Color iL = lightSource.getIntensity(intersection.point);
+            color = color.add(
+                    iL.scale(
+                            calcDiffusive(intersection).add(calcSpecular(intersection))
+                    )
+            );
+        }
+        return color;
+    }
+    /**
+     * calcDiffusive calculates the diffusive component of the color at the intersection point.
+     * It scales the diffuse color (KD) of the material by the absolute value of the dot product
+     * between the light direction (l) and the normal vector (n) at the intersection point.
+     * @param intersection The intersection point containing the material and light information
+     * @return The calculated diffusive color component
+     */
+    private Double3 calcDiffusive(Intersection intersection) {
+        return intersection.material.KD.scale(Math.abs(intersection.lDotN));
+    }
+    /**
+     * calcSpecular calculates the specular component of the color at the intersection point.
+     * It computes the reflection vector (r) based on the light direction (l) and the normal vector (n),
+     * then calculates the dot product of the view direction (v) and the reflection vector (r).
+     * @param intersection The intersection point containing the material and light information
+     * @return The calculated specular color component
+     */
+    private Double3 calcSpecular(Intersection intersection) {
+        Vector r = intersection.l.subtract(intersection.n.scale(2 * intersection.lDotN));
+        double vr = -1 * intersection.v.dotProduct(r);
+
+        return intersection.material.KS.scale(Math.pow(Math.max(0, vr), intersection.material.Nsh));
     }
 }
