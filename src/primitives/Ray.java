@@ -9,6 +9,10 @@ import primitives.Point;
  * It is defined by a starting point and a direction vector.
  */
 public class Ray {
+    /** * DELTA is a small value used to avoid self-intersection issues in ray tracing.
+     * It is used to offset the intersection point slightly along the normal vector.
+     */
+    private static final double DELTA = 0.1;
     /**
      * The ray is represented by a point and a vector.
      */
@@ -28,6 +32,20 @@ public class Ray {
         point = p1;
         vector = v1.normalize();
     } // constructor
+
+    /**
+     * Constructs a ray with the given point, vector, and normal vector.
+     * This constructor is used to avoid self-intersection issues by offsetting the point slightly along the normal vector.
+     * @param p1 is the starting point of the ray
+     * @param v1 is the direction vector of the ray
+     * @param n is the normal vector to offset the point slightly
+     */
+    public Ray(Point p1, Vector v1, Vector n) {
+        // constructor with a normal vector to avoid self-intersection issues
+        double VDotN = v1.dotProduct(n); // calculate the dot product of the vector and the normal vector
+        point = p1.add(n.scale(VDotN > 0 ? DELTA : -DELTA)); // offset the point slightly along the normal vector
+        vector = v1.normalize(); // normalize the vector to ensure it has a length of 1
+    } // constructor with a normal vector
 
     @Override
     public boolean equals(Object obj) {

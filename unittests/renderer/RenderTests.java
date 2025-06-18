@@ -3,7 +3,7 @@ package renderer;
 import static java.awt.Color.*;
 
 import geometries.Plane;
-import lighting.DirectionalLight;
+import lighting.*;
 import lighting.PointLight;
 import org.junit.jupiter.api.Test;
 
@@ -169,5 +169,75 @@ class RenderTests {
       camera1.renderImage()
               //.printGrid(100, new Color(WHITE))
               .writeToImage("My_own_test");
+   }
+
+   @Test
+   void A_cool_scene() {
+      Scene scene = new Scene("My Mirror & Glass Scene").setAmbientLight(new AmbientLight(new Color(10,0,0))).setBackground(new Color(40, 40, 0));
+      Camera camera = new Camera.Builder().setLocation(new Point(0, 1.5, 6)).setDirection(new Point(0, 1.2, 5), Vector.AXIS_Y)
+              .setResolution(600,600).setVpSize(4,4).setVpDistance(4).setRayTracer(scene, RayTracerType.SIMPLE).build();
+        scene.lights.add(
+                new SpotLight(
+                        new Color(250, 200, 120),              // strong white-orange light
+                        new Point(20, 20, 10),                  // position
+                        new Vector(-1, -1, -1))                 // direction
+                        .setKl(0.001).setKq(0.0001)
+                        .setNarrowBeam(15)
+
+        );
+      scene.geometries.add(
+              new Sphere(new Point(-1.5, 0, -4), 1)
+                      .setEmission(new Color(30, 30, 30)) // dark gray
+                      .setMaterial(new Material()
+                              .setKD(0.1)
+                              .setKS(0.5)
+                              .setShininess(100)
+                              .setKR(0.4))  // high reflectivity
+      );
+      scene.geometries.add(
+              new Sphere(new Point(1.5, 0, -4), 1)
+                      .setEmission(new Color(50, 80, 200).scale(0.2)) // bluish glass tint
+                      .setMaterial(new Material()
+                              .setKD(0.1)
+                              .setKS(0.5)
+                              .setShininess(100)
+                              .setKT(0.4))  // high transparency
+      );
+      scene.geometries.add(
+              new Plane(new Point(0, -1, 0), new Vector(0, 1, 0))
+                      .setEmission(new Color(70, 70, 70)) // neutral gray
+                      .setMaterial(new Material()
+                              .setKD(0.8)
+                              .setKS(0.2)
+                              .setShininess(50))
+      );
+      scene.geometries.add(
+              new Plane(new Point(0, 0, -8), new Vector(0, 0.3, 1).normalize())
+                      .setEmission(new Color(80, 90, 80)) // softer color
+                      .setMaterial(new Material()
+                              .setKD(0.5)         // less bold
+                              .setKS(0.1)
+                              .setShininess(30))
+      );
+      scene.geometries.add(
+              new Triangle(
+                      new Point(2.7, 0, -5.3),      // bottom left (back & right)
+                      new Point(2.7, 2, -5.3),      // top left (same X,Z, higher Y)
+                      new Point(4.7, 0, -3.3)       // bottom right (further right, closer Z)
+              )
+                      .setEmission(new Color(30, 30, 30)) // neutral gray
+                      .setMaterial(new Material()
+                              .setKR(0.5)           // full mirror
+                              .setKD(0)
+                              .setKS(0.1)
+                              .setShininess(100))
+      );
+      scene.lights.add(
+              new DirectionalLight(
+                      new Color(50, 50, 50),         // soft white light
+                      new Vector(-1, -0.5, -0.5))       // diagonal direction (like sunlight)
+      );
+        camera.renderImage()
+                .writeToImage("My Mirror & Glass Scene");
    }
 }

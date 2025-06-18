@@ -25,6 +25,14 @@ public class Material {
      * Represents the shininess of the material, affecting the size of specular highlights.
      */
     public int Nsh = 0; // Shininess coefficient
+    /**
+     * KT - Transparency coefficient
+     */
+    public Double3 KT = Double3.ZERO;
+    /**
+     * KR - Reflection coefficient
+     */
+    public Double3 KR = Double3.ZERO;
 
     /**
      * setter for Ka
@@ -87,6 +95,42 @@ public class Material {
      */
     public Material setShininess(int nSh) {
         this.Nsh = nSh;
+        return this;
+    }
+    /**
+     * setter for KT
+     * @param KT The diffuse reflection coefficient
+     * @return this Material object for method chaining
+     */
+    public Material setKT(Double3 KT) {
+        this.KT = KT;
+        return this;
+    }
+    /**
+     * setter for Kd uses a double value
+     * @param KT The diffuse reflection coefficient
+     * @return this Material object for method chaining
+     */
+    public Material setKT(double KT) {
+        this.KT = new Double3(KT);
+        return this;
+    }
+    /**
+     * setter for KR
+     * @param KR The diffuse reflection coefficient
+     * @return this Material object for method chaining
+     */
+    public Material setKR(Double3 KR) {
+        this.KR = KR;
+        return this;
+    }
+    /**
+     * setter for Kd uses a double value
+     * @param KR The diffuse reflection coefficient
+     * @return this Material object for method chaining
+     */
+    public Material setKR(double KR) {
+        this.KR = new Double3(KR);
         return this;
     }
     
