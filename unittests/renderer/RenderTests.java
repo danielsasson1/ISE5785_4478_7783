@@ -2,6 +2,9 @@ package renderer;
 
 import static java.awt.Color.*;
 
+import geometries.Plane;
+import lighting.DirectionalLight;
+import lighting.PointLight;
 import org.junit.jupiter.api.Test;
 
 import geometries.Sphere;
@@ -151,5 +154,20 @@ class RenderTests {
               .renderImage() //
               .printGrid(100, new Color(WHITE)) //
               .writeToImage("Bomb Test Render");
+   }
+
+   @Test
+   void My_own_test() {
+      Scene scene = new Scene("My own test").setAmbientLight(new AmbientLight(new Color(5,5,0)));
+      scene.geometries.add(new Sphere(new Point(0,0,0), 1).setMaterial(new Material().setKA(1).setKD(0.5).setKS(0.5).setShininess(10)).setEmission(new Color(5,5,100)),
+              new Plane(new Point(0,-1,0), Vector.AXIS_Y).setMaterial(new Material().setKA(1).setKD(0.8).setKS(0.2).setShininess(1)).setEmission(new Color(60,60,54)));
+      scene.setBackground(new Color (40, 0, 0)).
+              lights.add(new PointLight(new Color(0,400,200), new Point(5,5,5)).setKl(0.2).setKq(0.002));
+      scene.lights.add(new DirectionalLight(new Color(138,43,226),new Vector(1,-1,-1)));
+      Camera camera1 = camera.setRayTracer(scene, RayTracerType.SIMPLE).setLocation(new Point (0,5,10)).setResolution(500, 500).setDirection(new Point (0,0,0), Vector.AXIS_Y.scale(1))
+              .setVpDistance(3).setVpSize(2, 2).build();
+      camera1.renderImage()
+              //.printGrid(100, new Color(WHITE))
+              .writeToImage("My_own_test");
    }
 }

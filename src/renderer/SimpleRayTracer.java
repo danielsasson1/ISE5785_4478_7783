@@ -1,5 +1,6 @@
 package renderer;
 
+import lighting.DirectionalLight;
 import lighting.LightSource;
 import scene.Scene;
 import primitives.*;
@@ -13,6 +14,7 @@ import java.util.List;
  * It extends the RayTracerBase class and provides functionality to trace rays in a scene.
  */
 public class SimpleRayTracer extends RayTracerBase {
+    private static final double DELTA = 0.1;
     /**
      * Constructor for SimpleRayTracer
      * @param scene The scene to be rendered
@@ -88,8 +90,8 @@ public class SimpleRayTracer extends RayTracerBase {
         Color color = intersection.geometry.getEmission();
         for (LightSource lightSource : scene.lights) {
             // also checks if sign(nl) == sign(nv))
-            if (!setLightSource(intersection, lightSource) || Util.alignZero(intersection.lDotN * intersection.nDotV) <= 0 )
-                continue;
+            if (!setLightSource(intersection, lightSource) || Util.alignZero(intersection.lDotN * intersection.nDotV) <= 0 ) continue;
+            if (!unshaded(intersection)) continue; // If the point is shaded, skip to the next light source
             Color iL = lightSource.getIntensity(intersection.point);
             color = color.add(
                     iL.scale(
@@ -121,5 +123,22 @@ public class SimpleRayTracer extends RayTracerBase {
         double vr = -1 * intersection.v.dotProduct(r);
 
         return intersection.material.KS.scale(Math.pow(Math.max(0, vr), intersection.material.Nsh));
+    }
+    /**
+     * Checks if the point at the intersection is unshaded by casting a ray from the intersection point
+     * @param intersection
+     * @return
+     */
+    private boolean unshaded(Intersection intersection) {
+        Point pointDelta = intersection.point.add(intersection.n.scale(intersection.lDotN > 0 ? -DELTA : DELTA));
+        Ray check = new Ray(pointDelta, intersection.l.scale(-1));
+        List<Intersection> intersections = scene.geometries.calculateIntersections(check);
+        if (intersections == null) {
+            return true; // No intersections, the point is unshaded
+        }
+        Intersection closeIntersection = check.findClosestIntersection(intersections);
+        if (intersection.light instanceof DirectionalLight) return false;//Specific case for directional light, always shaded since there is an intersection, it was made to calculate faster.
+        if (closeIntersection.point.distance(pointDelta) > intersection.light.getDistance(intersection.point)) return true; // If the closest intersection is farther than the light source, the point is unshaded
+        return false; // If there is an intersection, the point is shaded
     }
 }
