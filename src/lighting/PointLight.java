@@ -1,6 +1,9 @@
 package lighting;
 import primitives.*;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * PointLight class represents a point light source in a 3D scene.
  * It extends the Light class and implements the LightSource interface.
@@ -77,4 +80,38 @@ public class PointLight extends Light implements LightSource {
         return position.distance(point);
     }
 
+    public void setSoftShadow(double radius, int numOfRays) {
+        this.radius = radius;
+        this.numOfRays = numOfRays;
+    }
+    @Override
+    public int getNumOfRays() {
+        return numOfRays;
+    }
+    @Override
+    public List<Vector> generateSampleVectors(Point point){
+        List<Point> samples = new LinkedList<>();
+        double phi = (1 + Math.sqrt(5)) / 2; // golden ratio
+
+        for (int i = 0; i < this.numOfRays; i++) {
+            double theta = 2 * Math.PI * i / phi;
+            double z = 1 - (2.0 * i + 1) / this.numOfRays;
+            double r = Math.sqrt(1 - z * z);
+            double x = r * Math.cos(theta);
+            double y = r * Math.sin(theta);
+
+            double px = position.point.d1() + radius * x;
+            double py = position.point.d2() + radius * y;
+            double pz = position.point.d3() + radius * z;
+
+            samples.add(new Point(px, py, pz));
+        }
+        samples.add(position); // Add the light position as a sample point
+        List<Vector> directions = new LinkedList<>();
+
+        for (Point sample : samples) {
+            directions.add(sample.subtract(point));
+        }
+        return directions;
+    }
 }

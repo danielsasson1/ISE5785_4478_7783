@@ -10,6 +10,10 @@ public abstract class Light {
      * The color of the light
      */
     protected final Color intensity;
+    /** for soft shadows - the radius of the circle */
+    protected double radius = 0.0; //no soft shadows by default
+    /** for soft shadows - the number of rays to sample */
+    protected int numOfRays = 1; //no soft shadows by default
 
     /**
      * Constructor for the light

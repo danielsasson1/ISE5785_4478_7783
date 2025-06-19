@@ -1,6 +1,8 @@
 package lighting;
 import primitives.*;
 
+import java.util.List;
+
 /**
  * SpotLight class represents a spotlight in a 3D scene.
  * It extends PointLight to include direction and angle of the spotlight.
@@ -58,5 +60,17 @@ public class SpotLight extends PointLight {
     public SpotLight setKq(double Kq) {
         super.setKq(Kq);
         return this;
+    }
+
+    public void setSoftShadow(double radius, int numOfRays) {
+        super.setSoftShadow(radius, numOfRays);
+    }
+    @Override
+    public int getNumOfRays() {
+        return numOfRays;
+    }
+    @Override
+    public List<Vector> generateSampleVectors(Point point){
+        return super.generateSampleVectors(point);
     }
 }

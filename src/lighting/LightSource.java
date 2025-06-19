@@ -1,5 +1,6 @@
 package lighting;
 import primitives.*;
+import java.util.List;
 
 /**
  * SpotLight class represents a spotlight in a 3D scene.
@@ -24,4 +25,21 @@ public interface LightSource {
      * @return the distance from the light source to the point
      */
     double getDistance(Point point);
+    /**
+     * Set the soft shadow parameters.
+     * @param radius the radius of the circle for soft shadows
+     * @param numOfRays the number of rays to sample for soft shadows
+     */
+    public void setSoftShadow(double radius, int numOfRays);
+    /**
+     * Get the number of rays for soft shadows.
+     * @return the number of rays to sample for soft shadows
+     */
+    public int getNumOfRays();
+    /**
+     * Calculates all the Vectors for soft shadows
+     * @param point the point in space where the vectors are calculated
+     * @return a List of vectors representing the directions for soft shadows
+     */
+    public List<Vector> generateSampleVectors(Point point);
 }

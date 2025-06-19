@@ -99,7 +99,7 @@ public class SimpleRayTracer extends RayTracerBase {
             if (!setLightSource(intersection, lightSource))
                 continue;
 
-            Double3 ktr = transparency(intersection);
+            Double3 ktr = transparencySoftShadows(intersection);
             if (!ktr.product(k).lowerThan(MIN_CALC_COLOR_K)) {
                 Color iL = lightSource.getIntensity(intersection.point).scale(ktr);
                 color = color
@@ -230,8 +230,8 @@ public class SimpleRayTracer extends RayTracerBase {
      * @param intersection The intersection point to calculate the transparency for
      * @return The calculated transparency at the intersection point
      */
-    private Double3 transparency(Intersection intersection) {
-        Ray ray = new Ray(intersection.point, intersection.l.scale(-1), intersection.n); // create a ray from the point to the light source
+    private Double3 transparency(Intersection intersection, Vector v1) {
+        Ray ray = new Ray(intersection.point, v1, intersection.n); // create a ray from the point to the light source
         var intersections = scene.geometries.calculateIntersections(ray);
 
         Double3 ktr = Double3.ONE;
@@ -249,6 +249,16 @@ public class SimpleRayTracer extends RayTracerBase {
         }
         return ktr;
     }
-
-
+    /**
+     * TransparencySoftShadows calculates the transparency of soft shadows at the intersection point.
+     */
+    private Double3 transparencySoftShadows(Intersection intersection) {
+        Double3 ktr = Double3.ZERO;
+        int size = intersection.light.getNumOfRays();
+        List<Vector> vectors = intersection.light.generateSampleVectors(intersection.point);
+        for (int i = 0; i < size; i++) {
+            ktr = ktr.add(transparency(intersection,vectors.get(i)));
+        }
+        return ktr.scale(1.0 / size); // Average the transparency over the number of rays
+    }
 }
