@@ -3,8 +3,10 @@ package renderer;
 import lighting.LightSource;
 import scene.Scene;
 import primitives.*;
+import geometries.*;
 import geometries.Intersectable.Intersection;
 import java.util.List;
+
 
 
 /**
@@ -231,6 +233,7 @@ public class SimpleRayTracer extends RayTracerBase {
      * @return The calculated transparency at the intersection point
      */
     private Double3 transparency(Intersection intersection, Vector v1) {
+        if (intersection.lDotN < 0 && (intersection.geometry.getClass() == Polygon.class || intersection.geometry instanceof Polygon_without || intersection.geometry instanceof Plane)) return Double3.ZERO; // If the dot product is negative, return zero transparency for polygons
         Ray ray = new Ray(intersection.point, v1, intersection.n); // create a ray from the point to the light source
         var intersections = scene.geometries.calculateIntersections(ray);
 

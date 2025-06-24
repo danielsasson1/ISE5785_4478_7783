@@ -25,7 +25,7 @@ class TubeTests {
         //TC01 point on the side surface of the tube
         assertEquals(new Vector(0, 1, 0), t1.getNormal(new Point(5, 5, 0)), "Failed to get normal vector for point on the side surface of the tube");
         //TC02 point on the downside of the tube
-        assertEquals(new Vector(-1, 0, 0), t1.getNormal(new Point(-1, 15, 0)), "Failed to get normal vector for point on the downside of the tube");
+        assertEquals(new Vector(0, 1, 0), t1.getNormal(new Point(-1, 15, 0)), "Failed to get normal vector for point on the downside of the tube");
         //=============== Boundary Values Tests ==================
         //TC03 point is the center of the tube
         assertNull(t1.getNormal(new Point(0, 0, 0)), "Failed to get normal vector for point at the center of the tube");

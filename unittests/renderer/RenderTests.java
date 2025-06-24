@@ -2,13 +2,11 @@ package renderer;
 
 import static java.awt.Color.*;
 
-import geometries.Plane;
+import geometries.*;
 import lighting.*;
 import lighting.PointLight;
 import org.junit.jupiter.api.Test;
 
-import geometries.Sphere;
-import geometries.Triangle;
 import lighting.AmbientLight;
 import primitives.*;
 import scene.Scene;
@@ -159,10 +157,10 @@ class RenderTests {
    @Test
    void My_own_test() {
       PointLight pointlight1 = new PointLight(new Color(0,400,200), new Point(5,5,5)).setKl(0.2).setKq(0.002);
-      pointlight1.setSoftShadow(0.5,1000);
+      pointlight1.setSoftShadow(0.5,60);
       Scene scene = new Scene("My own test").setAmbientLight(new AmbientLight(new Color(5,5,0)));
-      scene.geometries.add(new Sphere(new Point(0,0,0), 1).setMaterial(new Material().setKA(1).setKD(0.5).setKS(0.5).setShininess(10)).setEmission(new Color(5,5,100)),
-              new Plane(new Point(0,-1,0), Vector.AXIS_Y).setMaterial(new Material().setKA(1).setKD(0.8).setKS(0.2).setShininess(1)).setEmission(new Color(60,60,54)));
+      scene.geometries.add(new Cylinder(new Ray(new Point(0,0,0), Vector.AXIS_Y), 1, 3).setMaterial(new Material().setKA(1).setKD(0.5).setKS(0.5).setShininess(1)).setEmission(new Color(5,5,100)),
+              new Plane(new Point(0,-1,0), Vector.AXIS_Y.scale(-1)).setMaterial(new Material().setKA(1).setKD(0.8).setKS(0.2).setShininess(1)).setEmission(new Color(60,60,54)));
       scene.setBackground(new Color (40, 0, 0)).
               lights.add(pointlight1);
       //scene.lights.add(new DirectionalLight(new Color(138,43,226),new Vector(1,-1,-1)));
@@ -175,71 +173,62 @@ class RenderTests {
 
    @Test
    void A_cool_scene() {
-      Scene scene = new Scene("My Mirror & Glass Scene").setAmbientLight(new AmbientLight(new Color(10,0,0))).setBackground(new Color(40, 40, 0));
-      Camera camera = new Camera.Builder().setLocation(new Point(0, 1.5, 6)).setDirection(new Point(0, 1.2, 5), Vector.AXIS_Y)
-              .setResolution(600,600).setVpSize(4,4).setVpDistance(4).setRayTracer(scene, RayTracerType.SIMPLE).build();
-        scene.lights.add(
-                new SpotLight(
-                        new Color(250, 200, 120),              // strong white-orange light
-                        new Point(20, 20, 10),                  // position
-                        new Vector(-1, -1, -1))                 // direction
-                        .setKl(0.001).setKq(0.0001)
-                        .setNarrowBeam(15)
+      Material wallMaterial = new Material().setKA(0.2).setKD(0.6).setKS(0.2).setShininess(20).setKR(0.01),
+              mirrorMaterial = new Material().setKA(0.1).setKD(0.1).setKS(0.9).setShininess(300).setKR(0.90);
+      Material floorMaterial = new Material().setKA(0.2).setKD(0.6).setKS(0.2).setShininess(20).setKR(0.3);
+      Color wallColor = new Color(130, 130, 130);
+      Color floorColor = new Color(100, 100, 100);
+      Geometry floor = new Polygon(new Point(-100, 0, 100), new Point(100, 0, 100), new Point(100, 0, 300), new Point(-100, 0, 300))
+              .setMaterial(floorMaterial).setEmission(floorColor);
+      Geometry ceiling = new Polygon(new Point(-100, 200, 100), new Point(-100, 200, 300), new Point(100, 200, 300), new Point(100, 200, 100))
+              .setMaterial(wallMaterial).setEmission(floorColor);
+      Geometry backWall = new Polygon(new Point(-100, 200, 300), new Point(-100, 0, 300), new Point(100, 0, 300), new Point(100, 200, 300))
+              .setMaterial(wallMaterial).setEmission(wallColor);
+      Geometry leftWall = new Polygon(new Point(100, 0, 300),new Point(100, 0, 100),new Point(100, 200, 100),new Point(100, 200, 300))
+              .setMaterial(wallMaterial).setEmission(wallColor);
+      Polygon rightWall = new Polygon(new Point(-100, 0, 100),new Point(-100, 0, 300),new Point(-100, 200, 300), new Point(-100, 200, 100));
+      Geometry rightWallWithHole = new Polygon_without(rightWall,
+              new Polygon(new Point(-100, 50, 150), new Point(-100, 50, 250), new Point(-100, 150, 250), new Point(-100, 150, 150)))
+              .setMaterial(wallMaterial).setEmission(wallColor);
+      Geometry lightbulb = new Sphere(new Point(0, 170, 200), 20)
+              .setMaterial(new Material().setKA(0.1).setKD(0.1).setKS(0.9).setShininess(300).setKT(0.9))
+              .setEmission(new Color(0,0,0));
+      Geometry lightbulbholder = new Cylinder(new Ray(new Point(0, 190, 200), Vector.AXIS_Y), 10, 10)
+              .setMaterial(new Material().setKA(0.1).setKD(0.1).setKS(0.9).setShininess(300))
+              .setEmission(new Color(50,50,50));
+      //Mirror on the left wall:
+      Geometry mirror = new Polygon(new Point(99.9, 100, 220), new Point(99.9, 150, 220), new Point(99.9, 150, 120), new Point(99.9, 100, 120))
+              .setMaterial(mirrorMaterial).setEmission(new Color(0,3,0));
+      //Flashlight on the ceiling, top left corner:
+      Geometry flashlightHolder = new Cylinder(new Ray(new Point(90, 200, 180), new Vector(0,-1,0)), 5, 30)
+              .setMaterial(new Material().setKA(0.1).setKD(0.1).setKS(0.9).setShininess(300))
+              .setEmission(new Color(50,50,50));
+      //The actual flashlight:
+      Geometry flashlightGeo = new Cylinder(new Ray(new Point(90, 170, 180), new Vector(0,-1,0)), 10, 30)
+              .setMaterial(new Material().setKA(0.1).setKD(0.1).setKS(0.9).setShininess(300).setKT(0.9))
+              .setEmission(new Color(0,0,0));
+      Geometry sphere = new Sphere(new Point(0, 20, 180), 20)
+              .setMaterial(new Material().setKA(0.1).setKD(0.6).setKS(0.3).setShininess(300))
+              .setEmission(new Color(10,10,100));
+      //Directional light sun from window:
+      DirectionalLight sun = new DirectionalLight(new Color(255 / ((double)255/120), 255 / ((double)255/120), 170 / ((double)255/120)), new Vector(1, -1, -0.2));
+      //Point light from a bulb on the ceiling:
+      PointLight bulb = new PointLight(new Color(255,255,51), new Point(0, 170, 200))
+              .setKl(0.001).setKq(0.0001);
+      bulb.setSoftShadow(10, 10);
+      //Spotlight from a flashlight:
+      SpotLight flashlight = new SpotLight(new Color(150,20,150), new Point(90, 169, 180), new Vector(0, -1, 0))
+              .setKl(0.0001).setKq(0.00001).setNarrowBeam(10);
+      flashlight.setSoftShadow(5, 10);
 
-        );
-      scene.geometries.add(
-              new Sphere(new Point(-1.5, 0, -4), 1)
-                      .setEmission(new Color(30, 30, 30)) // dark gray
-                      .setMaterial(new Material()
-                              .setKD(0.1)
-                              .setKS(0.5)
-                              .setShininess(100)
-                              .setKR(0.4))  // high reflectivity
-      );
-      scene.geometries.add(
-              new Sphere(new Point(1.5, 0, -4), 1)
-                      .setEmission(new Color(50, 80, 200).scale(0.2)) // bluish glass tint
-                      .setMaterial(new Material()
-                              .setKD(0.1)
-                              .setKS(0.5)
-                              .setShininess(100)
-                              .setKT(0.4))  // high transparency
-      );
-      scene.geometries.add(
-              new Plane(new Point(0, -1, 0), new Vector(0, 1, 0))
-                      .setEmission(new Color(70, 70, 70)) // neutral gray
-                      .setMaterial(new Material()
-                              .setKD(0.8)
-                              .setKS(0.2)
-                              .setShininess(50))
-      );
-      scene.geometries.add(
-              new Plane(new Point(0, 0, -8), new Vector(0, 0.3, 1).normalize())
-                      .setEmission(new Color(80, 90, 80)) // softer color
-                      .setMaterial(new Material()
-                              .setKD(0.5)         // less bold
-                              .setKS(0.1)
-                              .setShininess(30))
-      );
-      scene.geometries.add(
-              new Triangle(
-                      new Point(2.7, 0, -5.3),      // bottom left (back & right)
-                      new Point(2.7, 2, -5.3),      // top left (same X,Z, higher Y)
-                      new Point(4.7, 0, -3.3)       // bottom right (further right, closer Z)
-              )
-                      .setEmission(new Color(30, 30, 30)) // neutral gray
-                      .setMaterial(new Material()
-                              .setKR(0.5)           // full mirror
-                              .setKD(0)
-                              .setKS(0.1)
-                              .setShininess(100))
-      );
-      scene.lights.add(
-              new DirectionalLight(
-                      new Color(50, 50, 50),         // soft white light
-                      new Vector(-1, -0.5, -0.5))       // diagonal direction (like sunlight)
-      );
-        camera.renderImage()
-                .writeToImage("My Mirror & Glass Scene");
+      Scene scene = new Scene("My Scene").setAmbientLight(new AmbientLight(new Color(255, 255, 255))).setBackground(new Color(204, 255, 255));
+      scene.geometries.add(floor, ceiling, backWall, leftWall, rightWallWithHole, lightbulb, lightbulbholder, mirror, flashlightHolder, flashlightGeo, sphere);
+      scene.lights.add(sun);
+      scene.lights.add(bulb);
+      scene.lights.add(flashlight);
+      Camera camera = new Camera.Builder().setLocation(new Point(0,100,0)).setDirection(new Point(0, 100, 200), Vector.AXIS_Y)
+              .setResolution(800,600).setVpSize(200,200).setVpDistance(100).setRayTracer(scene, RayTracerType.SIMPLE).build();
+      camera.renderImage()
+                .writeToImage("My_Pool_Scene");
    }
 }

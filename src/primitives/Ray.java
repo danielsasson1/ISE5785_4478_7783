@@ -64,7 +64,8 @@ public class Ray {
      * @return the point on the ray at the distance t from the head
      */
     public Point getPoint(double t) {
-        if (Util.isZero(t)) return point;
+        if (Util.isZero(t))
+            return point;
         return point.add(vector.scale(t));
     } // getter for the point at a certain distance from the head
 
