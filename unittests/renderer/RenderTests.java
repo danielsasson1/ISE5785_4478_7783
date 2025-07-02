@@ -157,13 +157,14 @@ class RenderTests {
    @Test
    void My_own_test() {
       PointLight pointlight1 = new PointLight(new Color(0,400,200), new Point(5,5,5)).setKl(0.2).setKq(0.002);
-      pointlight1.setSoftShadow(0.5,60);
+      //pointlight1.setSoftShadow(0.5,60);
       Scene scene = new Scene("My own test").setAmbientLight(new AmbientLight(new Color(5,5,0)));
-      scene.geometries.add(new Cylinder(new Ray(new Point(0,0,0), Vector.AXIS_Y), 1, 3).setMaterial(new Material().setKA(1).setKD(0.5).setKS(0.5).setShininess(1)).setEmission(new Color(5,5,100)),
+      scene.geometries.add(new Tube(new Ray(new Point(0,0,0), Vector.AXIS_Y), 1).setMaterial(new Material().setKA(1).setKD(0.5).setKS(0.5).setShininess(1)).setEmission(new Color(5,5,100)),
               new Plane(new Point(0,-1,0), Vector.AXIS_Y.scale(-1)).setMaterial(new Material().setKA(1).setKD(0.8).setKS(0.2).setShininess(1)).setEmission(new Color(60,60,54)));
       scene.setBackground(new Color (40, 0, 0)).
               lights.add(pointlight1);
       //scene.lights.add(new DirectionalLight(new Color(138,43,226),new Vector(1,-1,-1)));
+      scene.geometries.buildBVH();
       Camera camera1 = camera.setRayTracer(scene, RayTracerType.SIMPLE).setLocation(new Point (0,5,10)).setResolution(500, 500).setDirection(new Point (0,0,0), Vector.AXIS_Y.scale(1))
               .setVpDistance(3).setVpSize(2, 2).build();
       camera1.renderImage()
@@ -215,7 +216,7 @@ class RenderTests {
       //Point light from a bulb on the ceiling:
       PointLight bulb = new PointLight(new Color(255,255,51), new Point(0, 170, 200))
               .setKl(0.001).setKq(0.0001);
-      bulb.setSoftShadow(10, 10);
+//      bulb.setSoftShadow(10, 10);
       //Spotlight from a flashlight:
       SpotLight flashlight = new SpotLight(new Color(150,20,150), new Point(90, 169, 180), new Vector(0, -1, 0))
               .setKl(0.0001).setKq(0.00001).setNarrowBeam(10);
@@ -226,9 +227,10 @@ class RenderTests {
       scene.lights.add(sun);
       scene.lights.add(bulb);
       scene.lights.add(flashlight);
+      scene.geometries.buildBVH();
       Camera camera = new Camera.Builder().setLocation(new Point(0,100,0)).setDirection(new Point(0, 100, 200), Vector.AXIS_Y)
               .setResolution(800,600).setVpSize(200,200).setVpDistance(100).setRayTracer(scene, RayTracerType.SIMPLE).build();
       camera.renderImage()
-                .writeToImage("My_Pool_Scene");
+                .writeToImage("My_Pool_Scene_NO_SS");
    }
 }

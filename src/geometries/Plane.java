@@ -27,6 +27,7 @@ public class Plane extends Geometry {
     public Plane(Point point, Vector normal) {
         this.point = point;
         this.normal = normal.normalize();
+        box = null; // Bounding box is not calculated for Plane
     }
 
     /**
@@ -41,6 +42,7 @@ public class Plane extends Geometry {
         }
         this.point = p1;
         this.normal = p2.subtract(p1).crossProduct(p3.subtract(p1)).normalize(); // Calculate the normal vector using the cross product of two vectors in the plane
+        box = null; // Bounding box is not calculated for Plane
     }
     @Override
     public Vector getNormal(Point point) {

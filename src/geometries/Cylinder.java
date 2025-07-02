@@ -26,6 +26,29 @@ public class Cylinder extends Tube {
             throw new IllegalArgumentException("Radius must be greater than zero");
         }
         this.height = height;
+        Point base = axis.getPoint(0);
+        Vector dir = axis.getVector();
+        Point top = axis.getPoint(height);
+
+// Get base & top coordinates
+        double x1 = base.point.d1();
+        double y1 = base.point.d2();
+        double z1 = base.point.d3();
+        double x2 = top.point.d1();
+        double y2 = top.point.d2();
+        double z2 = top.point.d3();
+
+// Compute min and max including radius buffer
+        double minX = Math.min(x1, x2) - radius;
+        double minY = Math.min(y1, y2) - radius;
+        double minZ = Math.min(z1, z2) - radius;
+        double maxX = Math.max(x1, x2) + radius;
+        double maxY = Math.max(y1, y2) + radius;
+        double maxZ = Math.max(z1, z2) + radius;
+        this.box = new BoundingBox(
+                new Point(minX, minY, minZ),
+                new Point(maxX, maxY, maxZ)
+        );
     }
 
     @Override

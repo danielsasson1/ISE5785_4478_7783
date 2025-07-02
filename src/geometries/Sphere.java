@@ -1,9 +1,5 @@
 package geometries;
-import primitives.Point;
-import primitives.Ray;
-import primitives.Util;
-import primitives.Vector;
-
+import primitives.*;
 import java.util.List;
 
 /**
@@ -30,6 +26,20 @@ public class Sphere extends RadialGeometry {
             throw new IllegalArgumentException("Radius must be positive");
         }
         this.center = center;
+        Point min = new Point(
+                center.point.d1() - radius,
+                center.point.d2() - radius,
+                center.point.d3() - radius
+        );
+
+        Point max = new Point(
+                center.point.d1() + radius,
+                center.point.d2() + radius,
+                center.point.d3() + radius
+        );
+
+        // Assign the box (field from Intersectable)
+        this.box = new BoundingBox(min, max);
     }
 
     @Override

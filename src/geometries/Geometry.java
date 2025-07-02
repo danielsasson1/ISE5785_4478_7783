@@ -61,4 +61,5 @@ public abstract class Geometry extends Intersectable {
 
     @Override
     abstract protected List<Intersection> calculateIntersectionsHelper(Ray ray);
+
 }

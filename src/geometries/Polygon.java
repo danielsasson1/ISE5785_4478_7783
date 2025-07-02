@@ -76,6 +76,30 @@ public class Polygon extends Geometry {
             if (positive != (edge1.crossProduct(edge2).dotProduct(n) > 0))
                 throw new IllegalArgumentException("All vertices must be ordered and the polygon must be convex");
         }
+        double minX = vertices[0].point.d1();
+        double minY = vertices[0].point.d2();
+        double minZ = vertices[0].point.d3();
+        double maxX = minX;
+        double maxY = minY;
+        double maxZ = minZ;
+
+        for (int i = 1; i < vertices.length; i++) {
+            double x = vertices[i].point.d1();
+            double y = vertices[i].point.d2();
+            double z = vertices[i].point.d3();
+
+            if (x < minX) minX = x;
+            if (y < minY) minY = y;
+            if (z < minZ) minZ = z;
+            if (x > maxX) maxX = x;
+            if (y > maxY) maxY = y;
+            if (z > maxZ) maxZ = z;
+        }
+
+        Point min = new Point(minX, minY, minZ);
+        Point max = new Point(maxX, maxY, maxZ);
+
+        this.box = new BoundingBox(min, max);
     }
 
     @Override

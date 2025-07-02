@@ -22,6 +22,7 @@ public class Polygon_without extends Geometry{
     public Polygon_without(Polygon out, Polygon in) {
         this.out = out;
         this.in = in;
+        this.box = out.getBoundingBox();
     }
 
     @Override

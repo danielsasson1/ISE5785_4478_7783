@@ -21,6 +21,7 @@ public class Tube extends RadialGeometry{
     public Tube (Ray axis, double radius) {
         super(radius);
         this.axis = axis;
+        box = null; // Bounding box is not calculated for Tube
     }
 
     @Override

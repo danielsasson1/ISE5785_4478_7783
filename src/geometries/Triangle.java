@@ -1,4 +1,5 @@
 package geometries;
+import primitives.BoundingBox;
 import primitives.Point;
 import primitives.Ray;
 import java.util.List;
@@ -17,6 +18,18 @@ public class Triangle extends Polygon {
      */
     public Triangle(Point p1, Point p2, Point p3) {
         super(p1, p2, p3);
+        double minX = Math.min(p1.point.d1(), Math.min(p2.point.d1(), p3.point.d1()));
+        double minY = Math.min(p1.point.d2(), Math.min(p2.point.d2(), p3.point.d2()));
+        double minZ = Math.min(p1.point.d3(), Math.min(p2.point.d3(), p3.point.d3()));
+
+        double maxX = Math.max(p1.point.d1(), Math.max(p2.point.d1(), p3.point.d1()));
+        double maxY = Math.max(p1.point.d2(), Math.max(p2.point.d2(), p3.point.d2()));
+        double maxZ = Math.max(p1.point.d3(), Math.max(p2.point.d3(), p3.point.d3()));
+
+        Point min = new Point(minX, minY, minZ);
+        Point max = new Point(maxX, maxY, maxZ);
+
+        this.box = new BoundingBox(min, max);
     }
 
     @Override
@@ -31,4 +44,6 @@ public class Triangle extends Polygon {
         if (super.calculateIntersectionsHelper(ray) == null) return null;
         return List.of(new Intersection(this, super.calculateIntersectionsHelper(ray).getFirst().point));
     }
+
+
 }
