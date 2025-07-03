@@ -11,6 +11,8 @@ import lighting.AmbientLight;
 import primitives.*;
 import scene.Scene;
 
+import java.util.Random;
+
 /**
  * Test rendering a basic image
  * @author Dan
@@ -216,7 +218,7 @@ class RenderTests {
       //Point light from a bulb on the ceiling:
       PointLight bulb = new PointLight(new Color(255,255,51), new Point(0, 170, 200))
               .setKl(0.001).setKq(0.0001);
-//      bulb.setSoftShadow(10, 10);
+      bulb.setSoftShadow(10, 20);
       //Spotlight from a flashlight:
       SpotLight flashlight = new SpotLight(new Color(150,20,150), new Point(90, 169, 180), new Vector(0, -1, 0))
               .setKl(0.0001).setKq(0.00001).setNarrowBeam(10);
@@ -232,5 +234,38 @@ class RenderTests {
               .setResolution(800,600).setVpSize(200,200).setVpDistance(100).setRayTracer(scene, RayTracerType.SIMPLE).build();
       camera.renderImage()
                 .writeToImage("My_Pool_Scene_NO_SS");
+   }
+   @Test
+   void a_stress(){
+      Scene scene = new Scene("BVH Stress Test").setAmbientLight(new AmbientLight(new Color(200, 0, 0))).setBackground(new Color(20, 20, 100));
+      Geometries geometries = new Geometries();
+      Random rand = new Random(123);
+      for (int i = 0; i < 10000; i++) {
+         double x = rand.nextDouble() * 1000 - 500;
+         double y = rand.nextDouble() * 1000 - 500;
+         double z = rand.nextDouble() * 1000 - 500;
+         Point center = new Point(x, y, z);
+         Sphere s = new Sphere(center, 2);
+         //s.setEmission(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
+         geometries.add(s);
+      }
+      DirectionalLight sun = new DirectionalLight(new Color(255 / ((double)255/120), 255 / ((double)255/120), 170 / ((double)255/120)), new Vector(1, -1, -0.2));
+      //Point light from a bulb on the ceiling:
+      PointLight bulb = new PointLight(new Color(255,255,51), new Point(0, 170, 200))
+              .setKl(0.00001).setKq(0.000001);
+      //bulb.setSoftShadow(10, 20);
+      //Spotlight from a flashlight:
+      SpotLight flashlight = new SpotLight(new Color(150,20,150), new Point(90, 169, 180), new Vector(0, -1, 0))
+              .setKl(0.000001).setKq(0.0000001).setNarrowBeam(10);
+      //flashlight.setSoftShadow(5, 20);
+      scene.lights.add(sun);
+      scene.lights.add(bulb);
+      scene.lights.add(flashlight);
+      scene.setGeometries(geometries);
+      Camera camera = new Camera.Builder().setLocation(new Point(0,100,0)).setDirection(new Point(0, 100, 200), Vector.AXIS_Y)
+              .setResolution(800,600).setVpSize(200,200).setVpDistance(100).setRayTracer(scene, RayTracerType.SIMPLE).enableBVH().build();
+      camera.setMultithreading(-1).setDebugPrint(100);
+      camera.renderImage()
+              .writeToImage("aight");
    }
 }

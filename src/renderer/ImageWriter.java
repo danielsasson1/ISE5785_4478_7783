@@ -74,8 +74,8 @@ final class ImageWriter {
    /**
     * The function writePixel writes a color of a specific pixel into pixel color
     * matrix
-    * @param xIndex X axis index of the pixel
-    * @param yIndex Y axis index of the pixel
+    * @param xIndex X-axis index of the pixel
+    * @param yIndex Y-axis index of the pixel
     * @param color  final color of the pixel
     */
    void writePixel(int xIndex, int yIndex, Color color) { image.setRGB(xIndex, yIndex, color.getColor().getRGB()); }
