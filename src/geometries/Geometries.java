@@ -73,8 +73,8 @@ public class Geometries extends Intersectable{
 
         // Sort by center along axis
         geometries.sort(Comparator.comparingDouble(
-                g -> g.getBoundingBox().getCenter(axis)
-        ));
+                g -> g.getBoundingBox().getCenter(axis) // getBoundingBox().getCenter(axis
+        )); // Sort geometries by center along the chosen axis
 
         // Split list
         int mid = geometries.size() / 2;

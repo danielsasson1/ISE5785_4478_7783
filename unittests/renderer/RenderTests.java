@@ -231,7 +231,7 @@ class RenderTests {
       scene.lights.add(flashlight);
       scene.geometries.buildBVH();
       Camera camera = new Camera.Builder().setLocation(new Point(0,100,0)).setDirection(new Point(0, 100, 200), Vector.AXIS_Y)
-              .setResolution(800,600).setVpSize(200,200).setVpDistance(100).setRayTracer(scene, RayTracerType.SIMPLE).build();
+              .setResolution(800,600).setVpSize(200,200).setMultithreading(4).setDebugPrint(100).setVpDistance(100).setRayTracer(scene, RayTracerType.SIMPLE).build();
       camera.renderImage()
                 .writeToImage("My_Pool_Scene_NO_SS");
    }
@@ -264,7 +264,7 @@ class RenderTests {
       scene.setGeometries(geometries);
       Camera camera = new Camera.Builder().setLocation(new Point(0,100,0)).setDirection(new Point(0, 100, 200), Vector.AXIS_Y)
               .setResolution(800,600).setVpSize(200,200).setVpDistance(100).setRayTracer(scene, RayTracerType.SIMPLE).enableBVH().build();
-      camera.setMultithreading(-1).setDebugPrint(100);
+      camera.setMultithreading(0).setDebugPrint(100);
       camera.renderImage()
               .writeToImage("aight");
    }
